@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">rq_driver</string>
+    <string name="google_maps_api_key">AIzaSyBxmMvFa-cnkBefCz59gBC_75DgG4ZyCdw</string>
 </resources>

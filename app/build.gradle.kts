@@ -53,6 +53,13 @@ dependencies {
     // navegacion
     implementation(libs.androidx.navigation.compose)
 
+    // Google Maps
+    implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
+    implementation(libs.maps.compose)
+    // Dependencias para obtener ubicación
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
     // marcelo
     implementation(libs.androidx.material.icons.extended)
 

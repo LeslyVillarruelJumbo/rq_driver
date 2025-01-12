@@ -1,4 +1,7 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">rq_driver</string>
     <string name="google_maps_api_key">AIzaSyBxmMvFa-cnkBefCz59gBC_75DgG4ZyCdw</string>
+    <string name="tooltip_cedula" tools:ignore="Typos">Los datos personales como la cédula de identidad te los pedimos por tu seguridad y los otros miembros de RouteQ, y no los divulgaremos en ningún momento, respetamos tu privacidad !</string>
+    <string name="tooltip_telefono">Es importante que nos proporciones tu teléfono para poder comunicarnos contigo, y para que te resulte sencillo recuperar tu cuenta por este medio en caso de que pierdas el acceso.</string>
+    <string name="tooltip_usuario">En caso de que no especifiques un nombre de usuario, nosotros escogeremos uno por ti. Este nombre no se mostrará a otros usuarios, pero nos permite identificarte y podrás utilizarlo para iniciar sesión.</string>
 </resources>

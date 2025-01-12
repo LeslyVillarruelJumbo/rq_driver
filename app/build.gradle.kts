@@ -60,6 +60,8 @@ dependencies {
     // Dependencias para obtener ubicación
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    // marcelo
+    implementation(libs.androidx.material.icons.extended)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

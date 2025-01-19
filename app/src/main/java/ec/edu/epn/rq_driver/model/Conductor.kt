@@ -3,6 +3,7 @@ package ec.edu.epn.rq_user.model
 import java.util.Date
 
 data class Conductor(
+  val firesbaseId: String,
   val nombre: String,
   val apellido: String,
   val fechaNacimiento: Date,

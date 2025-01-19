@@ -1,4 +1,4 @@
-package ec.edu.epn.rq_user.uin.profile
+package ec.edu.epn.rq_driver.uin.profile
 
 import android.os.Build
 
@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import ec.edu.epn.rq_user.model.Usuario
+import ec.edu.epn.rq_driver.model.Usuario
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter.ofPattern
 
@@ -59,7 +59,8 @@ fun UserHouseScreen(navController: NavController) {
     email = "sebas.cruz750@gmail.com",
     telefono = "0978601625",
     cedula = "1719356006",
-    fechaNacimiento = LocalDate.parse("04/11/2000", formatter)
+    fechaNacimiento = LocalDate.parse("04/11/2000", formatter),
+    firesbaseId = "1"
   )
 
   Box(

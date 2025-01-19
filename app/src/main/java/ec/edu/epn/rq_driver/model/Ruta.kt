@@ -1,4 +1,4 @@
-package ec.edu.epn.rq_user.model
+package ec.edu.epn.rq_driver.model
 
 data class Ruta (
   val puntoInicio: String,

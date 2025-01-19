@@ -146,7 +146,7 @@ fun RutaDetalleScreen(navController: NavController, rutaNombre: String) {
                     navController.navigate("rutaMapScreen?startLat=$startLatitude&startLng=$startLongitude&endLat=$endLatitude&endLng=$endLongitude")
                 },
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .weight(1f)
                     .height(48.dp)
                     .padding(top = 16.dp),
                 colors = ButtonDefaults.buttonColors(Color(42, 157, 143))

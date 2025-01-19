@@ -23,14 +23,14 @@ import ec.edu.epn.rq_driver.uin.PerfilScreen
 import ec.edu.epn.rq_driver.uin.RecuperarCuentaScreen
 import ec.edu.epn.rq_driver.uin.LogInScreen
 import ec.edu.epn.rq_driver.uin.RutaDetalleScreen
-import ec.edu.epn.rq_driver.uin.RutaMapScreen
-import ec.edu.epn.rq_driver.uin.SignUpScreen
-import ec.edu.epn.rq_user.uin.profile.UserEmailScreen
-import ec.edu.epn.rq_user.uin.profile.UserHouseScreen
-import ec.edu.epn.rq_user.uin.profile.UserInfoScreen
-import ec.edu.epn.rq_user.uin.profile.UserNameScreen
-import ec.edu.epn.rq_user.uin.profile.UserPhoneScreen
-import ec.edu.epn.rq_user.uin.profile.UserSettingsScreen
+//import ec.edu.epn.rq_driver.uin.RutaMapScreen
+//import ec.edu.epn.rq_driver.uin.SignUpScreen
+import ec.edu.epn.rq_driver.uin.profile.UserEmailScreen
+import ec.edu.epn.rq_driver.uin.profile.UserHouseScreen
+import ec.edu.epn.rq_driver.uin.profile.UserInfoScreen
+import ec.edu.epn.rq_driver.uin.profile.UserNameScreen
+import ec.edu.epn.rq_driver.uin.profile.UserPhoneScreen
+import ec.edu.epn.rq_driver.uin.profile.UserSettingsScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -40,7 +40,7 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "favoritas",
+            startDestination = "login",
             modifier = Modifier
                 .fillMaxSize()  // ✅ Asegurar que el NavHost use el espacio correctamente
                 .padding(innerPadding)  // ✅ Evita que el contenido se superponga con el NavBar
@@ -84,7 +84,7 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
                 val endLat = backStackEntry.arguments?.getFloat("endLat") ?: 0f
                 val endLng = backStackEntry.arguments?.getFloat("endLng") ?: 0f
 
-                RutaMapScreen(startLat, startLng, endLat, endLng)
+//                RutaMapScreen(startLat, startLng, endLat, endLng)
             }
 
             // Pantallas Módulo LogIn/SignUp

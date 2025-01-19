@@ -284,5 +284,5 @@ fun InfoTooltipButton(modifier: Modifier, tooltip: String) {
 @Composable
 private fun SignUpPreview() {
     val navController = rememberNavController()
-    AppNavigation(navController)
+//    AppNavigation(navController)
 }

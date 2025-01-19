@@ -40,7 +40,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -49,19 +48,21 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.lifecycle.viewmodel.compose)
 
-    // navegacion
+    // Navegación
     implementation(libs.androidx.navigation.compose)
 
-    // Google Maps
+    // Google Maps - APIs y Servicios
     implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
     implementation(libs.maps.compose)
-    // Dependencias para obtener ubicación
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    // marcelo
+
+    // Dependencias adicionales (por ejemplo, Material Icons)
     implementation(libs.androidx.material.icons.extended)
+    implementation(libs.ui) // Verifica que la versión sea la correcta
+    implementation(libs.material3)
+    implementation(libs.androidx.foundation.layout.android) // Si usas Material3
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

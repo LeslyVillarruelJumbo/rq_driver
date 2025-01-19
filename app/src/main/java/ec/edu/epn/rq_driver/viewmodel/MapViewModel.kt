@@ -1,87 +1,92 @@
 package ec.edu.epn.rq_driver.viewmodel
 
-import android.annotation.SuppressLint
+import android.Manifest
 import android.app.Application
+import android.content.pm.PackageManager
 import android.location.Geocoder
-import android.location.Location
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.AndroidViewModel
-import com.google.android.gms.location.*
+import androidx.lifecycle.viewModelScope
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import java.util.Locale
+import android.util.Log
 
 class MapViewModel(application: Application) : AndroidViewModel(application) {
 
     private val fusedLocationClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(application)
 
+    // Estado para verificar si el permiso de ubicación fue concedido
+    private val _locationPermissionGranted = MutableStateFlow(false)
+    val locationPermissionGranted: StateFlow<Boolean> = _locationPermissionGranted
+
+    // Estado para almacenar la ubicación actual del usuario
     private val _userLocation = MutableStateFlow<LatLng?>(null)
     val userLocation: StateFlow<LatLng?> = _userLocation
 
-    private val _nearbyPlaces = MutableStateFlow<List<LatLng>>(emptyList())
-    val nearbyPlaces: StateFlow<List<LatLng>> = _nearbyPlaces
+    // Estado para almacenar coordenadas de un lugar
+    private val _coordinates = MutableStateFlow<LatLng?>(null)
+    val coordinates: StateFlow<LatLng?> = _coordinates
 
-    private val _searchedLocation = MutableStateFlow<LatLng?>(null)
-    val searchedLocation: StateFlow<LatLng?> = _searchedLocation
-
+    // Estado para el mensaje de error
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage
 
-    private val locationCallback = object : LocationCallback() {
-        override fun onLocationResult(locationResult: LocationResult) {
-            locationResult.lastLocation?.let { location ->
-                actualizarUbicacion(location)
+    // Verificar permisos y obtener ubicación
+    fun checkLocationPermission() {
+        viewModelScope.launch {
+            // Verificar si los permisos están concedidos
+            val permissionGranted = ActivityCompat.checkSelfPermission(
+                getApplication(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+            _locationPermissionGranted.value = permissionGranted
+
+            // Si el permiso fue concedido, obtener la ubicación
+            if (permissionGranted) {
+                getCurrentLocation()
             }
         }
     }
 
-    init {
-        obtenerUbicacionPeriodica()
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun obtenerUbicacionPeriodica() {
-        val locationRequest = LocationRequest.create().apply {
-            interval = 10000 // Cada 10 segundos
-            fastestInterval = 5000
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
-        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
-    }
-
-    private fun actualizarUbicacion(location: Location) {
-        val nuevaUbicacion = LatLng(location.latitude, location.longitude)
-        _userLocation.value = nuevaUbicacion
-        _nearbyPlaces.value = generarPuntosCercanos(nuevaUbicacion)
-    }
-
-    // 🌍 Nueva función para buscar direcciones
-    fun searchLocation(address: String) {
-        val context = getApplication<Application>().applicationContext
-        val geocoder = Geocoder(context, Locale.getDefault())
-
-        try {
-            val result = geocoder.getFromLocationName(address, 1)
-            result?.firstOrNull()?.let {
-                _searchedLocation.value = LatLng(it.latitude, it.longitude)
+    // Obtener ubicación actual
+    private fun getCurrentLocation() {
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            location?.let {
+                _userLocation.value = LatLng(it.latitude, it.longitude)
             }
-        } catch (e: Exception) {
-            _searchedLocation.value = null  // Si no encuentra nada, reseteamos el estado
         }
     }
 
-    private fun generarPuntosCercanos(ubicacion: LatLng): List<LatLng> {
-        return listOf(
-            LatLng(ubicacion.latitude + 0.001, ubicacion.longitude + 0.001),
-            LatLng(ubicacion.latitude - 0.001, ubicacion.longitude - 0.001),
-            LatLng(ubicacion.latitude + 0.002, ubicacion.longitude - 0.002),
-            LatLng(ubicacion.latitude - 0.002, ubicacion.longitude + 0.002)
-        )
-    }
+    // Obtener coordenadas de una dirección
+    fun getCoordinates(address: String, apiKey: String) {
+        viewModelScope.launch {
+            try {
+                val geocoder = Geocoder(getApplication(), Locale.getDefault())
+                val addressList = geocoder.getFromLocationName(address, 1)
 
-    override fun onCleared() {
-        super.onCleared()
-        fusedLocationClient.removeLocationUpdates(locationCallback)
+                // Verificar si la lista de direcciones es válida
+                if (addressList != null && addressList.isNotEmpty()) {
+                    val location = addressList[0]
+                    _coordinates.value = LatLng(location.latitude, location.longitude)
+                    _errorMessage.value = null // Limpiamos el mensaje de error
+                } else {
+                    _coordinates.value = null // No se encontraron coordenadas
+                    _errorMessage.value = "No se pudieron obtener las coordenadas para: $address"
+                }
+            } catch (e: Exception) {
+                // Capturar excepciones y loguear para depurar
+                Log.e("GeocodingError", "Error al obtener coordenadas: ${e.message}")
+                _coordinates.value = null
+                _errorMessage.value = "Error al geocodificar la dirección: $address"
+            }
+        }
     }
 }
+
+

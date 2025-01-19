@@ -1,5 +1,7 @@
 package ec.edu.epn.rq_driver.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -19,7 +21,14 @@ import ec.edu.epn.rq_driver.uin.PerfilScreen
 import ec.edu.epn.rq_driver.uin.RecuperarCuentaScreen
 import ec.edu.epn.rq_driver.uin.LogInScreen
 import ec.edu.epn.rq_driver.uin.SignUpScreen
+import ec.edu.epn.rq_user.uin.profile.UserEmailScreen
+import ec.edu.epn.rq_user.uin.profile.UserHouseScreen
+import ec.edu.epn.rq_user.uin.profile.UserInfoScreen
+import ec.edu.epn.rq_user.uin.profile.UserNameScreen
+import ec.edu.epn.rq_user.uin.profile.UserPhoneScreen
+import ec.edu.epn.rq_user.uin.profile.UserSettingsScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier, logged: MutableState<Boolean> = remember { mutableStateOf(false) }) {
     Scaffold(
@@ -42,6 +51,15 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
             composable("login") { LogInScreen(navController, logged) }
             composable("signup") { SignUpScreen(navController) }
             composable("recuperar") { RecuperarCuentaScreen(navController) }
+
+            // Pantallas de Profile
+            composable("configuracion") { UserSettingsScreen(navController)}
+            composable("informacion") { UserInfoScreen(navController) }
+            composable("updateNombre") { UserNameScreen(navController) }
+            composable("updateTelefono") { UserPhoneScreen(navController) }
+            composable("updateEmail") { UserEmailScreen(navController) }
+            composable("updateHouse") { UserHouseScreen(navController) }
+
 
         }
     }

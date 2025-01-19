@@ -32,7 +32,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
+//import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Button
@@ -70,171 +70,171 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 
-@Composable
-fun SignUpScreen(nav: NavHostController = rememberNavController()) {
-    var submitted by remember { mutableStateOf(false) }
-    val firstName = remember { mutableStateOf("") }
-    val lastName = remember { mutableStateOf("") }
-    val id = remember { mutableStateOf("") }
-    val celNum = remember { mutableStateOf("") }
-    val mail = remember { mutableStateOf("") }
-    val username = remember { mutableStateOf("") }
-    val password = remember { mutableStateOf("") }
-    val passwordConfirmation = remember { mutableStateOf("") }
-
-    val scrollState = rememberScrollState()
-    var columnHeight by remember { mutableIntStateOf(0) }
-    val textFieldPositions = remember { mutableMapOf<Int, Int>() }
-    val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
-    var focusedInputIndex: Int? by remember { mutableStateOf(null) }
-
-    LaunchedEffect(keyboardHeight) {
-        focusedInputIndex?.let {
-            val yPosition: Int = textFieldPositions[it]!!
-            if (yPosition <= 0) {
-                scrollState.scrollTo(yPosition)
-            } else if (yPosition > (keyboardHeight - scrollState.value)) {
-                scrollState.scrollBy(keyboardHeight.toFloat())
-            }
-        }
-    }
-
-    val modificador = { inputIndex: Int ->
-        Modifier
-            .onGloballyPositioned {
-                textFieldPositions[inputIndex] = it.positionInRoot().y.dp.value.toInt()
-            }
-            .onFocusChanged {
-                if (it.isFocused) {
-                    focusedInputIndex = inputIndex
-                }
-            }
-    }
-
-    class Campo (
-        val placeholder : String,
-        val value : MutableState<String>,
-        val hiddeable : Boolean = false,
-        val modifier : (Int) -> Modifier = modificador,
-        val tooltip: String? = null
-    )
-
-    val campos = arrayOf (
-        Campo(placeholder = "Nombre(s) *", value = firstName),
-        Campo(placeholder = "Apellido(s) *", value = lastName),
-        Campo(placeholder = "Cédula de Identidad *", value = id, tooltip = stringResource(R.string.tooltip_cedula)),
-        Campo(placeholder = "Número de Teléfono *", value = celNum, tooltip = stringResource(R.string.tooltip_telefono)),
-        Campo(placeholder = "Correo Electrónico *", value = mail),
-        Campo(placeholder = "Nombre de Usuario *", value = username, tooltip = stringResource(R.string.tooltip_usuario)),
-        Campo(placeholder = "Contraseña *", value = password, hiddeable = true),
-        Campo(placeholder = "Confirmar Contraseña *", value = passwordConfirmation, hiddeable = true)
-    )
-
-    val condition = true
-    fun signUpHandler() {
-        if(condition) {
-            submitted = true
-            @Suppress("DEPRECATION")
-            Handler().postDelayed({
-                run {
-                    nav.navigate("login")
-                }
-            },1000)
-        }
-    }
-
-    Box(Utils.universalModifier) {
-
-        if (!submitted) {
-
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight(.94f)
-                    .fillMaxWidth(25 / 32f)
-                    .align(Alignment.Center)
-                    .verticalScroll(scrollState)
-                    .imePadding()
-                    .onGloballyPositioned { coordinates ->
-                        columnHeight = coordinates.size.height
-                    },
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Row(Modifier.height(175.dp)) {
-                    Avatar()
-                }
-                Spacer(Modifier.height(15.dp))
-                Column(verticalArrangement = Arrangement.spacedBy(13.dp)) {
-                    campos.mapIndexed { indice, campo ->
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Box {
-                                Input(
-                                    placeholder = campo.placeholder,
-                                    value = campo.value,
-                                    hiddeable = campo.hiddeable,
-                                    modifier = campo.modifier(indice)
-                                )
-                            }
-                            campo.tooltip?.let {
-                                InfoTooltipButton(Modifier.align(Alignment.CenterVertically), it)
-                            }
-                        }
-                    }
-                }
-                Spacer(Modifier.height(15.dp))
-                Button(
-                    onClick = { signUpHandler() },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Verde,
-                        disabledContainerColor = Color.LightGray
-                    ),
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = firstName.value.isNotEmpty() &&
-                            lastName.value.isNotEmpty() &&
-                            id.value.isNotEmpty() &&
-                            celNum.value.isNotEmpty() &&
-                            mail.value.isNotEmpty() &&
-                            username.value.isNotEmpty() &&
-                            password.value.isNotEmpty() &&
-                            passwordConfirmation.value.isNotEmpty()
-                ) { Text("Crear Cuenta") }
-            }
-            IconButton(onClick = { nav.navigateUp() }, Modifier.offset(10.dp)) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBackIosNew,
-                    contentDescription = "Ir atrás",
-                    tint = Color.White,
-                    modifier = Modifier.size(25.dp)
-                )
-            }
-        } else {
-
-            Column(
-                Modifier
-                    .align(Alignment.Center)
-                    .fillMaxSize(.75f),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Check,
-                    contentDescription = "Registro Exitoso",
-                    tint = Verde,
-                    modifier = Modifier
-                        .aspectRatio(1f)
-                        .fillMaxWidth()
-                )
-                Text(
-                    "¡Registro Exitoso!",
-                    color = Verde,
-                    fontWeight = FontWeight.Black,
-                    fontSize = 35.sp
-                )
-            }
-
-        }
-    }
-}
+//@Composable
+//fun SignUpScreen(nav: NavHostController = rememberNavController()) {
+//    var submitted by remember { mutableStateOf(false) }
+//    val firstName = remember { mutableStateOf("") }
+//    val lastName = remember { mutableStateOf("") }
+//    val id = remember { mutableStateOf("") }
+//    val celNum = remember { mutableStateOf("") }
+//    val mail = remember { mutableStateOf("") }
+//    val username = remember { mutableStateOf("") }
+//    val password = remember { mutableStateOf("") }
+//    val passwordConfirmation = remember { mutableStateOf("") }
+//
+//    val scrollState = rememberScrollState()
+//    var columnHeight by remember { mutableIntStateOf(0) }
+//    val textFieldPositions = remember { mutableMapOf<Int, Int>() }
+//    val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
+//    var focusedInputIndex: Int? by remember { mutableStateOf(null) }
+//
+//    LaunchedEffect(keyboardHeight) {
+//        focusedInputIndex?.let {
+//            val yPosition: Int = textFieldPositions[it]!!
+//            if (yPosition <= 0) {
+//                scrollState.scrollTo(yPosition)
+//            } else if (yPosition > (keyboardHeight - scrollState.value)) {
+//                scrollState.scrollBy(keyboardHeight.toFloat())
+//            }
+//        }
+//    }
+//
+//    val modificador = { inputIndex: Int ->
+//        Modifier
+//            .onGloballyPositioned {
+//                textFieldPositions[inputIndex] = it.positionInRoot().y.dp.value.toInt()
+//            }
+//            .onFocusChanged {
+//                if (it.isFocused) {
+//                    focusedInputIndex = inputIndex
+//                }
+//            }
+//    }
+//
+//    class Campo (
+//        val placeholder : String,
+//        val value : MutableState<String>,
+//        val hiddeable : Boolean = false,
+//        val modifier : (Int) -> Modifier = modificador,
+//        val tooltip: String? = null
+//    )
+//
+//    val campos = arrayOf (
+//        Campo(placeholder = "Nombre(s) *", value = firstName),
+//        Campo(placeholder = "Apellido(s) *", value = lastName),
+//        Campo(placeholder = "Cédula de Identidad *", value = id, tooltip = stringResource(R.string.tooltip_cedula)),
+//        Campo(placeholder = "Número de Teléfono *", value = celNum, tooltip = stringResource(R.string.tooltip_telefono)),
+//        Campo(placeholder = "Correo Electrónico *", value = mail),
+//        Campo(placeholder = "Nombre de Usuario *", value = username, tooltip = stringResource(R.string.tooltip_usuario)),
+//        Campo(placeholder = "Contraseña *", value = password, hiddeable = true),
+//        Campo(placeholder = "Confirmar Contraseña *", value = passwordConfirmation, hiddeable = true)
+//    )
+//
+//    val condition = true
+//    fun signUpHandler() {
+//        if(condition) {
+//            submitted = true
+//            @Suppress("DEPRECATION")
+//            Handler().postDelayed({
+//                run {
+//                    nav.navigate("login")
+//                }
+//            },1000)
+//        }
+//    }
+//
+//    Box(Utils.universalModifier) {
+//
+//        if (!submitted) {
+//
+//            Column(
+//                modifier = Modifier
+//                    .fillMaxHeight(.94f)
+//                    .fillMaxWidth(25 / 32f)
+//                    .align(Alignment.Center)
+//                    .verticalScroll(scrollState)
+//                    .imePadding()
+//                    .onGloballyPositioned { coordinates ->
+//                        columnHeight = coordinates.size.height
+//                    },
+//                verticalArrangement = Arrangement.SpaceBetween,
+//                horizontalAlignment = Alignment.CenterHorizontally
+//            ) {
+//                Row(Modifier.height(175.dp)) {
+//                    Avatar()
+//                }
+//                Spacer(Modifier.height(15.dp))
+//                Column(verticalArrangement = Arrangement.spacedBy(13.dp)) {
+//                    campos.mapIndexed { indice, campo ->
+//                        Row(verticalAlignment = Alignment.CenterVertically) {
+//                            Box {
+//                                Input(
+//                                    placeholder = campo.placeholder,
+//                                    value = campo.value,
+//                                    hiddeable = campo.hiddeable,
+//                                    modifier = campo.modifier(indice)
+//                                )
+//                            }
+//                            campo.tooltip?.let {
+//                                InfoTooltipButton(Modifier.align(Alignment.CenterVertically), it)
+//                            }
+//                        }
+//                    }
+//                }
+//                Spacer(Modifier.height(15.dp))
+//                Button(
+//                    onClick = { signUpHandler() },
+//                    colors = ButtonDefaults.buttonColors(
+//                        containerColor = Verde,
+//                        disabledContainerColor = Color.LightGray
+//                    ),
+//                    modifier = Modifier.fillMaxWidth(),
+//                    enabled = firstName.value.isNotEmpty() &&
+//                            lastName.value.isNotEmpty() &&
+//                            id.value.isNotEmpty() &&
+//                            celNum.value.isNotEmpty() &&
+//                            mail.value.isNotEmpty() &&
+//                            username.value.isNotEmpty() &&
+//                            password.value.isNotEmpty() &&
+//                            passwordConfirmation.value.isNotEmpty()
+//                ) { Text("Crear Cuenta") }
+//            }
+//            IconButton(onClick = { nav.navigateUp() }, Modifier.offset(10.dp)) {
+//                Icon(
+//                    imageVector = Icons.Filled.ArrowBackIosNew,
+//                    contentDescription = "Ir atrás",
+//                    tint = Color.White,
+//                    modifier = Modifier.size(25.dp)
+//                )
+//            }
+//        } else {
+//
+//            Column(
+//                Modifier
+//                    .align(Alignment.Center)
+//                    .fillMaxSize(.75f),
+//                verticalArrangement = Arrangement.Center,
+//                horizontalAlignment = Alignment.CenterHorizontally
+//            ) {
+//                Icon(
+//                    imageVector = Icons.Filled.Check,
+//                    contentDescription = "Registro Exitoso",
+//                    tint = Verde,
+//                    modifier = Modifier
+//                        .aspectRatio(1f)
+//                        .fillMaxWidth()
+//                )
+//                Text(
+//                    "¡Registro Exitoso!",
+//                    color = Verde,
+//                    fontWeight = FontWeight.Black,
+//                    fontSize = 35.sp
+//                )
+//            }
+//
+//        }
+//    }
+//}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

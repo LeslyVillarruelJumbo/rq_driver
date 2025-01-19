@@ -49,17 +49,21 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.lifecycle.viewmodel.compose)
 
     // navegacion
     implementation(libs.androidx.navigation.compose)
 
-    // Google Maps
+    // Google Maps - APIs y Servicios
     implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
     implementation(libs.maps.compose)
+    implementation(libs.places.android)
+
     // Dependencias para obtener ubicación
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+
     // marcelo
     implementation(libs.androidx.material.icons.extended)
 

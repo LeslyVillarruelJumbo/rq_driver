@@ -18,7 +18,7 @@ import ec.edu.epn.rq_driver.uin.FavoritasScreen
 import ec.edu.epn.rq_driver.uin.PerfilScreen
 import ec.edu.epn.rq_driver.uin.RecuperarCuentaScreen
 import ec.edu.epn.rq_driver.uin.LogInScreen
-import ec.edu.epn.rq_driver.uin.SignUpScreen
+//import ec.edu.epn.rq_driver.uin.SignUpScreen
 
 @Composable
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier, logged: MutableState<Boolean> = remember { mutableStateOf(false) }) {
@@ -27,7 +27,7 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "login",
+            startDestination = "crearuta",
             modifier = Modifier
                 .fillMaxSize()  // ✅ Asegurar que el NavHost use el espacio correctamente
                 .padding(innerPadding)  // ✅ Evita que el contenido se superponga con el NavBar
@@ -40,7 +40,7 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
 
             // Pantallas Módulo LogIn/SignUp
             composable("login") { LogInScreen(navController, logged) }
-            composable("signup") { SignUpScreen(navController) }
+            //composable("signup") { SignUpScreen(navController) }
             composable("recuperar") { RecuperarCuentaScreen(navController) }
 
         }

@@ -58,10 +58,6 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.maps.compose)
 
-    // Dependencias para obtener ubicación de API de Google
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-
     // Dependencias adicionales (por ejemplo, Material Icons)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.ui) // Verifica que la versión sea la correcta
@@ -75,4 +71,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // APIs
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
 }

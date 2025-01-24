@@ -71,7 +71,7 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
                 val addressList = geocoder.getFromLocationName(address, 1)
 
                 // Verificar si la lista de direcciones es válida
-                if (addressList != null && addressList.isNotEmpty()) {
+                if (!addressList.isNullOrEmpty()) {
                     val location = addressList[0]
                     _coordinates.value = LatLng(location.latitude, location.longitude)
                     _errorMessage.value = null // Limpiamos el mensaje de error

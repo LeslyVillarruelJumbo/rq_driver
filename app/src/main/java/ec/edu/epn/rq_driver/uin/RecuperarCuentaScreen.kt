@@ -1,5 +1,7 @@
 package ec.edu.epn.rq_driver.uin
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import ec.edu.epn.rq_driver.components.Input
 import ec.edu.epn.rq_driver.components.Utils
 import ec.edu.epn.rq_driver.navigation.AppNavigation
@@ -124,6 +126,7 @@ fun RecuperarCuentaScreen(nav: NavHostController) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 private fun RetrieveAccountPreview() {

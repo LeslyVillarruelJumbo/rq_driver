@@ -45,7 +45,7 @@ fun RutaDetalleScreen(navController: NavController, rutaNombre: String) {
     ) {
         // Título de "Ruta" con texto en negrita y mayor tamaño
         Text(
-            text = "${ruta.nombre}",
+            text = ruta.nombre,
             style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.Bold,
                 fontSize = MaterialTheme.typography.titleLarge.fontSize * 1.5f // Título más grande

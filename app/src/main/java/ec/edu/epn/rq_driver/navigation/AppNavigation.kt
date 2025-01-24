@@ -36,7 +36,8 @@ import ec.edu.epn.rq_driver.uin.profile.UserSettingsScreen
 @Composable
 fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier, logged: MutableState<Boolean> = remember { mutableStateOf(false) }) {
     Scaffold(
-        bottomBar = { if (logged.value) NavBar(navController) }  // ✅ Se asegura que el NavBar esté presente
+        bottomBar = { if (logged.value) NavBar(navController) },  // ✅ Se asegura que el NavBar esté presente
+        modifier = modifier
     ) { innerPadding ->
         NavHost(
             navController = navController,

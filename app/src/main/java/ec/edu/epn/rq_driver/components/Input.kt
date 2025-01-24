@@ -91,6 +91,7 @@ fun Input(
                                 )
                         }
                     } else {
+                        @Suppress("UNUSED_EXPRESSION")
                         null
                     }
                 },

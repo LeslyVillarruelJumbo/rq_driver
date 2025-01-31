@@ -79,16 +79,11 @@ fun Input(
                 trailingIcon = {
                     if (hiddeable) {
                         IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                            if (passwordVisible)
-                                Icon(
-                                    imageVector = Icons.Filled.Visibility,
-                                    contentDescription = "Hide password"
-                                )
-                            else
-                                Icon(
-                                    imageVector = Icons.Filled.VisibilityOff,
-                                    contentDescription = "Show password"
-                                )
+                            Icon(
+                                imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                                contentDescription = if (passwordVisible) "Hide password" else "Show password",
+                                tint = Azul
+                            )
                         }
                     } else {
                         @Suppress("UNUSED_EXPRESSION")

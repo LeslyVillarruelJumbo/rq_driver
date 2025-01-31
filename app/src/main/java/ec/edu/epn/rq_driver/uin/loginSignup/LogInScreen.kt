@@ -139,7 +139,7 @@ fun LogInScreen(
                         )
 
                         Text(
-                            text = "Iniciar con Google",
+                            text = "Acceder con Google",
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.align(Alignment.Center)
                         )

@@ -27,6 +27,16 @@ android {
             "WEB_CLIENT_ID",
             "\"${gradleLocalProperties(rootDir, project.providers).getProperty("web-client.id")}\""
         )
+        buildConfigField(
+            "String",
+            "SERVER_URL",
+            "\"${gradleLocalProperties(rootDir, project.providers).getProperty("server.url")}\""
+        )
+        buildConfigField(
+            "String",
+            "SERVER_PORT",
+            "\"${gradleLocalProperties(rootDir, project.providers).getProperty("server.port")}\""
+        )
     }
 
     buildTypes {

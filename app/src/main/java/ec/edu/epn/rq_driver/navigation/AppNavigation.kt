@@ -69,7 +69,8 @@ fun AppNavigation(
             composable("explora") { ExploraScreen(navController) }
             composable("crearuta") { CreaRutaScreen(navController) }
             composable("favoritas") { FavoritasScreen(navController) }
-            composable("perfil") { PerfilScreen(navController) }
+            composable("perfil") { PerfilScreen(navController, authViewModel::cerrarSesion) }
+
             // Pantallas adicionales de rutas
             composable("ruta_detalle/{rutaNombre}") { backStackEntry ->
                 val rutaNombre = backStackEntry.arguments?.getString("rutaNombre")

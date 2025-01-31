@@ -1,7 +1,12 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
+    // Google Services
+    alias(libs.plugins.gms.google.services)
 }
 
 android {
@@ -16,6 +21,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            "String",
+            "WEB_CLIENT_ID",
+            "\"${gradleLocalProperties(rootDir, project.providers).getProperty("web-client.id")}\""
+        )
     }
 
     buildTypes {
@@ -36,6 +47,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -50,8 +62,19 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.lifecycle.viewmodel.compose)
 
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
+
     // Navegación
     implementation(libs.androidx.navigation.compose)
+
+    // Enhanced UI
+    implementation(libs.androidx.material.icons.extended)
 
     // Google Maps - APIs y Servicios
     implementation(libs.play.services.maps)
@@ -63,16 +86,17 @@ dependencies {
     implementation(libs.ui) // Verifica que la versión sea la correcta
     implementation(libs.material3)
     implementation(libs.androidx.foundation.layout.android) // Si usas Material3
-
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.androidx.fragment.ktx)
 
     // APIs
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth.ktx)
+
+    // Google Play Services
+    implementation(libs.play.services.base)
+    implementation(libs.play.services.auth)
 }

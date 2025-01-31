@@ -1,10 +1,6 @@
 package ec.edu.epn.rq_driver.uin
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.TimePickerDialog
-import android.content.Context
-import android.os.Bundle
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,19 +24,17 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import ec.edu.epn.rq_driver.viewmodel.MapViewModel
 import java.util.Calendar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreaRutaScreen(navController: NavController, mapViewModel: MapViewModel = viewModel()) {
     var startPoint by remember { mutableStateOf("") }
     var endPoint by remember { mutableStateOf("") }
     var time by remember { mutableStateOf("00:00") }
-    var seats by remember { mutableStateOf(1) }
+    var seats by remember { mutableIntStateOf(1) }
     var showMap by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
 

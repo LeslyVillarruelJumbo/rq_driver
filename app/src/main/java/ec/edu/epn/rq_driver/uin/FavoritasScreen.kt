@@ -13,7 +13,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.compose.ui.Alignment
@@ -75,7 +75,7 @@ fun RutaCard(ruta: Ruta, navController: NavController) {
                 Text(text = ruta.nombre, style = MaterialTheme.typography.bodyLarge)
                 Text(text = ruta.direccion, style = MaterialTheme.typography.bodyMedium)
             }
-            Icon(imageVector = Icons.Filled.ArrowForward, contentDescription = "Ir a detalles")
+            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Ir a detalles")
         }
     }
 }

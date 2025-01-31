@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,6 +48,7 @@ fun Avatar() {
         Image(
             painter = painterResource(imagen ?: R.drawable.default_user),
             contentDescription = "",
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxSize()
                 .clip(CircleShape)
@@ -54,7 +56,7 @@ fun Avatar() {
                 .border(1.dp, Azul, CircleShape)
         )
         IconButton(
-            onClick = { imagen = R.drawable.logo_routeq },
+            onClick = { imagen = R.drawable.pfp },
             modifier = Modifier
                 .fillMaxSize(1 / 5f)
                 .align(Alignment.BottomEnd)

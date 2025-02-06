@@ -1,9 +1,14 @@
-package ec.edu.epn.rq_user.model
+package ec.edu.epn.rq_driver.model
 
 data class Ruta (
-  val puntoInicio: String,
-  val puntoFinal: String,
+  val latitudInicial: Number,
+  val latitudFinal: Number,
+  val longitudInicial: Number,
+  val longitudFinal: Number,
   val horaPartida: String,
   val conductorID: String,
   val estadoRuta: Boolean,
+  val nombreRuta: String,
+  val puntoInicial: String,
+  val puntoFinal: String,
 )

@@ -1,4 +1,4 @@
-package ec.edu.epn.rq_user.model
+package ec.edu.epn.rq_driver.model
 
 import java.time.LocalDate
 

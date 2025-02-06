@@ -11,4 +11,5 @@ data class Ruta (
   val nombreRuta: String,
   val puntoInicial: String,
   val puntoFinal: String,
+  val asientosDisponibles: Number,
 )

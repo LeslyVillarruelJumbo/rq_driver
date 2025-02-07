@@ -1,7 +1,9 @@
 package ec.edu.epn.rq_driver.uin
 
 import android.app.TimePickerDialog
+
 import android.util.Log
+
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,7 +21,15 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+
 import com.google.android.gms.maps.model.LatLng
+
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import ec.edu.epn.rq_driver.viewmodel.MapViewModel
 import ec.edu.epn.rq_driver.viewmodel.RutaViewModel
 import java.util.Calendar
@@ -31,13 +41,15 @@ import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import kotlinx.coroutines.delay
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreaRutaScreen(navController: NavController, rutaViewModel: RutaViewModel = viewModel(), mapViewModel: MapViewModel = viewModel()) {
     var startPoint by remember { mutableStateOf("") }
     var endPoint by remember { mutableStateOf("") }
     var time by remember { mutableStateOf("00:00") }
-    var seats by remember { mutableStateOf(1) }
+    var seats by remember { mutableIntStateOf(1) }
+    var showMap by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
+
 
     val context = LocalContext.current
 

@@ -54,13 +54,13 @@ import java.time.format.DateTimeFormatter.ofPattern
 fun UserEmailScreen(navController: NavController) {
   val formatter = ofPattern("MM/dd/yyyy")
   val mockUser = Usuario(
-      nombre = "Sebastian",
-      apellido = "Cruz",
-      email = "sebas.cruz750@gmail.com",
-      telefono = "0978601625",
-      cedula = "1719356006",
-      fechaNacimiento = LocalDate.parse("04/11/2000", formatter),
-      firesbaseId = "1"
+    nombre = "Sebastian",
+    apellido = "Cruz",
+    firesbaseId = "1",
+    email = "sebas.cruz750@gmail.com",
+    telefono = "0978601625",
+    cedula = "1719356006",
+    fechaNacimiento = LocalDate.parse("04/11/2000", formatter)
   )
 
   Box(

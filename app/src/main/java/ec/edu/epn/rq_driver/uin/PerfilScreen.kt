@@ -49,7 +49,7 @@ import java.time.format.DateTimeFormatter.ofPattern
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun PerfilScreen(navController: NavController, onLogout: () -> Unit = {}) {
+fun PerfilScreen(navController: NavController, onLogout: () -> Unit) {
     val scrollState = rememberScrollState()
 
     // Datos mockeados para el usuario

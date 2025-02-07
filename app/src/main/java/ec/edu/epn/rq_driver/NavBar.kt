@@ -23,6 +23,7 @@ fun NavBar(navController: NavHostController, modifier: Modifier = Modifier) {
     val items = listOf("Crear rutas", "Rutas", "Perfil")
     val routes = listOf("crearuta", "favoritas", "perfil")
 
+
     val selectedIcons = listOf(
         Icons.Filled.Place,
         Icons.Filled.Edit,

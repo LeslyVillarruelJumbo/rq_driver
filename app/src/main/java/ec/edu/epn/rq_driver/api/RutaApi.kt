@@ -18,4 +18,5 @@ interface RutaApi {
 
     @GET("api/route/{routeId}")
     suspend fun usuariosRuta(@Path("routeId") routeId: String): List<Usuario>
+
 }

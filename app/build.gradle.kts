@@ -80,6 +80,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // APIs
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+
+
     // Navegación
     implementation(libs.androidx.navigation.compose)
 

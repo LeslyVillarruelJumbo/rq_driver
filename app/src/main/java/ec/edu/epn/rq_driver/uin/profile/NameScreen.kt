@@ -1,6 +1,10 @@
 package ec.edu.epn.rq_driver.uin.profile
 
 import android.os.Build
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -50,12 +54,12 @@ fun UserNameScreen(navController: NavController) {
   val formatter = ofPattern("MM/dd/yyyy")
   val mockUser = Usuario(
     nombre = "Sebastian",
+    firesbaseId = "1",
     apellido = "Cruz",
     email = "sebas.cruz750@gmail.com",
     telefono = "0978601625",
     cedula = "1719356006",
-    fechaNacimiento = LocalDate.parse("04/11/2000", formatter),
-    firesbaseId = "1"
+    fechaNacimiento = LocalDate.parse("04/11/2000", formatter)
   )
 
   Box(

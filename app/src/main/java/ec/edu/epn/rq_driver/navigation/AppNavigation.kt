@@ -20,6 +20,9 @@ import ec.edu.epn.rq_driver.uin.ExploraScreen
 import ec.edu.epn.rq_driver.uin.CreaRutaScreen
 import ec.edu.epn.rq_driver.uin.FavoritasScreen
 import ec.edu.epn.rq_driver.uin.PerfilScreen
+import ec.edu.epn.rq_driver.uin.RecuperarCuentaScreen
+import ec.edu.epn.rq_driver.uin.LogInScreen
+import ec.edu.epn.rq_driver.uin.SignUpScreen
 import ec.edu.epn.rq_driver.uin.loginSignup.RecuperarCuentaScreen
 import ec.edu.epn.rq_driver.uin.loginSignup.LogInScreen
 import ec.edu.epn.rq_driver.uin.RutaDetalleScreen
@@ -117,6 +120,7 @@ fun AppNavigation(
             composable("updateTelefono") { UserPhoneScreen(navController) }
             composable("updateEmail") { UserEmailScreen(navController) }
             composable("updateHouse") { UserHouseScreen(navController) }
+
         }
     }
 }

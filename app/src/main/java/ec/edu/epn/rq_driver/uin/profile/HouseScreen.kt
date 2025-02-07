@@ -56,11 +56,11 @@ fun UserHouseScreen(navController: NavController) {
   val mockUser = Usuario(
     nombre = "Sebastian",
     apellido = "Cruz",
+    firesbaseId = "1",
     email = "sebas.cruz750@gmail.com",
     telefono = "0978601625",
     cedula = "1719356006",
-    fechaNacimiento = LocalDate.parse("04/11/2000", formatter),
-    firesbaseId = "1"
+    fechaNacimiento = LocalDate.parse("04/11/2000", formatter)
   )
 
   Box(

@@ -151,7 +151,7 @@ fun SignUpScreen(
             !usuarioSeHaAutenticado && validacionConfirmarPassword.status -> mensajeLocal = validacionConfirmarPassword.message
             else -> {
                 val usuario = Conductor(
-                    firesbaseId = firebaseId.value ?: (0..1000).random().toString(),  // TODO
+                    firesbaseId = firebaseId.value ?: (0..1000).random().toString(),
                     nombre = nombre.value,
                     apellido = apellido.value,
                     fechaNacimiento = Date(),

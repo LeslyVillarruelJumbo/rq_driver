@@ -1,6 +1,9 @@
 package ec.edu.epn.rq_driver.uin
 
 import android.app.TimePickerDialog
+
+import android.util.Log
+
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,10 +19,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+
+import com.google.android.gms.maps.model.LatLng
+
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
@@ -27,10 +31,18 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import ec.edu.epn.rq_driver.viewmodel.MapViewModel
+import ec.edu.epn.rq_driver.viewmodel.RutaViewModel
 import java.util.Calendar
+import ec.edu.epn.rq_driver.model.Ruta
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.AutocompletePrediction
+import com.google.android.libraries.places.api.model.AutocompleteSessionToken
+import com.google.android.libraries.places.api.net.FetchPlaceRequest
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
+import kotlinx.coroutines.delay
 
 @Composable
-fun CreaRutaScreen(navController: NavController, mapViewModel: MapViewModel = viewModel()) {
+fun CreaRutaScreen(navController: NavController, rutaViewModel: RutaViewModel = viewModel(), mapViewModel: MapViewModel = viewModel()) {
     var startPoint by remember { mutableStateOf("") }
     var endPoint by remember { mutableStateOf("") }
     var time by remember { mutableStateOf("00:00") }
@@ -38,33 +50,68 @@ fun CreaRutaScreen(navController: NavController, mapViewModel: MapViewModel = vi
     var showMap by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
 
+
     val context = LocalContext.current
 
-    // Obtener los parámetros pasados desde la navegación
-    val startPointParam = navController.currentBackStackEntry?.arguments?.getString("startPoint")
-    val endPointParam = navController.currentBackStackEntry?.arguments?.getString("endPoint")
-    val timeParam = navController.currentBackStackEntry?.arguments?.getString("time")
-    val seatsParam = navController.currentBackStackEntry?.arguments?.getInt("seats")
+    val placesClient = remember { Places.createClient(context) }
+    val token = remember { AutocompleteSessionToken.newInstance() }
+    var startCoords by remember { mutableStateOf<LatLng?>(null) }
+    var endCoords by remember { mutableStateOf<LatLng?>(null) }
+    var suggestions by remember { mutableStateOf<List<AutocompletePrediction>>(emptyList()) }
 
-    // Si los parámetros no son nulos, actualiza los valores de los campos
-    startPoint = startPointParam ?: ""
-    endPoint = endPointParam ?: ""
-    time = timeParam ?: "00:00"
-    seats = seatsParam ?: 1
+    fun buscarSugerencias(query: String) {
+        val request = FindAutocompletePredictionsRequest.builder()
+            .setSessionToken(token)
+            .setQuery(query)
+            .build()
 
-    // para verificar si está en modo edición
-    val isEditing = startPoint.isNotEmpty() && endPoint.isNotEmpty() && time != "00:00"
-
-    // Obtener la API Key desde strings.xml
-    val apiKey = "AIzaSyBxmMvFa-cnkBefCz59gBC_75DgG4ZyCdw"
-
-    // Verificar permisos y obtener la ubicación
-    LaunchedEffect(Unit) {
-        mapViewModel.checkLocationPermission()
+        placesClient.findAutocompletePredictions(request)
+            .addOnSuccessListener { response ->
+                suggestions = response.autocompletePredictions
+            }
+            .addOnFailureListener { exception ->
+                Log.e("Places", "Error al obtener sugerencias: ${exception.message}")
+            }
     }
 
-    val locationPermissionGranted by mapViewModel.locationPermissionGranted.collectAsState()
-    val userLocation by mapViewModel.userLocation.collectAsState()
+    fun obtenerCoordenadas(placeId: String, isStart: Boolean) {
+        val placeRequest = FetchPlaceRequest.newInstance(placeId, listOf(com.google.android.libraries.places.api.model.Place.Field.LAT_LNG))
+
+        placesClient.fetchPlace(placeRequest)
+            .addOnSuccessListener { response ->
+                val coordenadas = response.place.latLng
+                if (coordenadas != null) {
+                    if (isStart) startCoords = coordenadas else endCoords = coordenadas
+                    Log.d("Coordenadas", "Lat: ${coordenadas.latitude}, Lng: ${coordenadas.longitude}")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("Places", "Error al obtener coordenadas: ${exception.message}")
+            }
+    }
+
+    // Mensaje de crear ruta
+    val mensajeToast = rutaViewModel.mensajeCrearRuta.collectAsState().value
+    val esExito = rutaViewModel.esExito.collectAsState().value
+
+    LaunchedEffect(mensajeToast) {
+        mensajeToast?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            rutaViewModel.limpiarMensajeCrearRuta() // Limpiar el mensaje después de mostrar el toast
+        }
+    }
+
+    LaunchedEffect(esExito) {
+        Log.d("Navegacion", "esExito: $esExito")
+        if (esExito == true) {
+            delay(100)
+            navController.navigate("favoritas")
+            rutaViewModel.limpiarExito()
+        } else if (esExito == false) {
+            rutaViewModel.limpiarExito()
+        }
+    }
+
 
     // Lógica para mostrar el TimePicker
     val showTimePicker = {
@@ -82,35 +129,6 @@ fun CreaRutaScreen(navController: NavController, mapViewModel: MapViewModel = vi
         timePicker.show()
     }
 
-    // Callback para cargar el mapa
-    val mapCallback = remember {
-        object : OnMapReadyCallback {
-            override fun onMapReady(googleMap: GoogleMap) {
-                googleMap.uiSettings.isZoomControlsEnabled = true
-
-                if (startPoint.isNotEmpty()) {
-                    // Obtener coordenadas de la dirección de inicio
-                    mapViewModel.getCoordinates(startPoint, apiKey)
-                }
-
-                if (endPoint.isNotEmpty()) {
-                    // Obtener coordenadas de la dirección de destino
-                    mapViewModel.getCoordinates(endPoint, apiKey)
-                }
-            }
-        }
-    }
-
-    // Observar las coordenadas desde el ViewModel
-    val coordinates by mapViewModel.coordinates.collectAsState()
-
-    // Mostrar mensaje si no se pudo obtener las coordenadas
-    if (coordinates == null && (startPoint.isNotEmpty() || endPoint.isNotEmpty())) {
-        errorMessage = "No se pudieron obtener las coordenadas direcciones proporcionadas incorrectas."
-    } else {
-        errorMessage = ""
-    }
-
     // Estructura principal
     Column(
         modifier = Modifier
@@ -125,47 +143,49 @@ fun CreaRutaScreen(navController: NavController, mapViewModel: MapViewModel = vi
             modifier = Modifier.padding(top = 60.dp, bottom = 24.dp, start = 16.dp)
         )
 
-        // Campos de entrada de texto
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(end = 24.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            TextField(
-                value = startPoint,
-                onValueChange = { startPoint = it },
-                label = { Text("Punto de inicio") },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 16.dp, end = 8.dp, top = 16.dp),
-//                colors = TextFieldDefaults.textFieldColors(containerColor = Color(42, 157, 143))
-            )
-
-            Button(
-                onClick = { navController.navigate("explora") },
-                modifier = Modifier
-                    .height(48.dp)
-                    .width(80.dp),
-                contentPadding = PaddingValues(horizontal = 8.dp)
-            ) {
-                Text(text = "IR")
-            }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
+        // Campo de búsqueda para el punto de inicio
         TextField(
-            value = endPoint,
-            onValueChange = { endPoint = it },
-            label = { Text("Punto de llegada") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                .padding(end = 24.dp),
-//            colors = TextFieldDefaults.textFieldColors(containerColor = Color(42, 157, 143))
+            value = startPoint,
+            onValueChange = {
+                startPoint = it
+                buscarSugerencias(it)
+            },
+            label = { Text("Punto de inicio") }
         )
 
+        suggestions.forEach { suggestion ->
+            Text(
+                text = suggestion.getFullText(null).toString(),
+                modifier = Modifier.clickable {
+                    startPoint = suggestion.getFullText(null).toString()
+                    obtenerCoordenadas(suggestion.placeId, isStart = true)
+                    suggestions = emptyList() // Limpiar sugerencias
+                }
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Campo de búsqueda para el punto final
+        TextField(
+            value = endPoint,
+            onValueChange = {
+                endPoint = it
+                buscarSugerencias(it)
+            },
+            label = { Text("Punto de llegada") }
+        )
+
+        suggestions.forEach { suggestion ->
+            Text(
+                text = suggestion.getFullText(null).toString(),
+                modifier = Modifier.clickable {
+                    endPoint = suggestion.getFullText(null).toString()
+                    obtenerCoordenadas(suggestion.placeId, isStart = false)
+                    suggestions = emptyList()
+                }
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = time,
             onValueChange = { },
@@ -173,10 +193,7 @@ fun CreaRutaScreen(navController: NavController, mapViewModel: MapViewModel = vi
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                .padding(end = 24.dp)
-                .clickable { showTimePicker() },
-            readOnly = true,
-//            colors = TextFieldDefaults.textFieldColors(containerColor = Color(42, 157, 143))
+                .clickable { showTimePicker() }
         )
 
         OutlinedTextField(
@@ -185,9 +202,7 @@ fun CreaRutaScreen(navController: NavController, mapViewModel: MapViewModel = vi
             label = { Text("Asientos disponibles") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                .padding(end = 24.dp),
-            readOnly = true,
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
             trailingIcon = {
                 Row {
                     IconButton(
@@ -203,8 +218,7 @@ fun CreaRutaScreen(navController: NavController, mapViewModel: MapViewModel = vi
                         Icon(imageVector = Icons.Default.Add, contentDescription = "Incrementar", tint = Color.White)
                     }
                 }
-            },
-//            colors = TextFieldDefaults.textFieldColors(containerColor = Color(42, 157, 143))
+            }
         )
 
         // Fila con dos botones: "Ver Ruta" y "Crear Ruta"
@@ -217,35 +231,22 @@ fun CreaRutaScreen(navController: NavController, mapViewModel: MapViewModel = vi
             Button(
                 onClick = {
                     if (startPoint.isNotEmpty() && endPoint.isNotEmpty()) {
-                        if (!locationPermissionGranted) {
-                            Toast.makeText(context, "Por favor concede el permiso de ubicación", Toast.LENGTH_SHORT).show()
-                        } else {
-                            showMap = true
-                        }
-                    } else {
-                        Toast.makeText(context, "Por favor ingresa un punto de inicio y un punto final.", Toast.LENGTH_SHORT).show()
-                    }
-                },
-                modifier = Modifier
-                    .weight(1f)
-                    .height(48.dp),
-                colors = ButtonDefaults.buttonColors(Color(42, 157, 143))
-            ) {
-                Text("Ver Ruta", color = Color.White)
-            }
+                        val nuevaRuta = Ruta(
+                            departureTime = time,
+                            routeState = false, // Esto puede cambiar dependiendo de la lógica de tu aplicación
+                            driverId = "67a3ec2da46723a987f76feb", // Agrega el ID del conductor
+                            startLong = startCoords?.longitude ?: -0.250709,
+                            finalLong = endCoords?.longitude ?: -0.223709,
+                            startLat = startCoords?.latitude ?: -0.250709,
+                            finalLat = endCoords?.latitude ?: -0.223709,
+                            routeName = "Ruta",
+                            startPoint = startPoint,
+                            finalPoint = endPoint,
+                            availableSeats = seats
+                        )
 
-            Button(
-                onClick = {
-                    if (startPoint.isNotEmpty() && endPoint.isNotEmpty()) {
-                        val message = if (isEditing) {
-                            "La ruta se ha editado correctamente"
-                        } else {
-                            "Ruta creada con éxito"
-                        }
-                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-
-                        // Redirigir a FavoritasScreen
-                        navController.navigate("favoritas")
+                        // Llamamos a la función para crear la ruta
+                        rutaViewModel.crearRuta(nuevaRuta)
                     } else {
                         Toast.makeText(context, "Por favor ingresa todos los campos", Toast.LENGTH_SHORT).show()
                     }
@@ -255,60 +256,8 @@ fun CreaRutaScreen(navController: NavController, mapViewModel: MapViewModel = vi
                     .height(48.dp),
                 colors = ButtonDefaults.buttonColors(Color(42, 157, 143))
             ) {
-                Text(text = if (isEditing) "Editar Ruta" else "Crear Ruta", color = Color.White)
+                Text(text = "Crear Ruta", color = Color.White)
             }
-        }
-
-        // Mostrar mensaje de error si no se obtuvieron las coordenadas
-        if (errorMessage.isNotEmpty()) {
-            Text(
-                text = errorMessage,
-                color = Color.Red,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp)
-            )
-        }
-
-        // Mostrar el mapa si se presionó el botón "Ver Ruta"
-        if (showMap) {
-            AndroidView(
-                factory = { context ->
-                    MapView(context).apply {
-                        onCreate(null)
-                        getMapAsync { googleMap ->
-                            googleMap.uiSettings.isZoomControlsEnabled = true
-
-                            // Agregar marcadores al mapa
-                            coordinates?.let {
-                                googleMap.addMarker(
-                                    MarkerOptions()
-                                        .position(it)
-                                        .title("Punto de inicio")
-                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                                )
-                            }
-
-                            // Si también tienes el endPoint, añade el marcador para el destino
-                            if (coordinates != null) {
-                                googleMap.addMarker(
-                                    MarkerOptions()
-                                        .position(coordinates!!)
-                                        .title("Punto de llegada")
-                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                                )
-                            }
-
-                            // Mover la cámara al punto de inicio
-                            coordinates?.let { googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 10f)) }
-                        }
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp)
-                    .padding(16.dp)
-            )
         }
     }
 }
-

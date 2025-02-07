@@ -80,6 +80,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // APIs
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+
+
     // Navegación
     implementation(libs.androidx.navigation.compose)
 
@@ -90,6 +95,8 @@ dependencies {
     implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
     implementation(libs.maps.compose)
+    implementation(libs.places)
+    implementation(libs.google.maps.services)
 
     // Dependencias adicionales (por ejemplo, Material Icons)
     implementation(libs.androidx.material.icons.extended)

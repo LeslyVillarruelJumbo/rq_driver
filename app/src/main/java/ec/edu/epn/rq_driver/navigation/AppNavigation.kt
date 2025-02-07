@@ -20,6 +20,9 @@ import ec.edu.epn.rq_driver.uin.ExploraScreen
 import ec.edu.epn.rq_driver.uin.CreaRutaScreen
 import ec.edu.epn.rq_driver.uin.FavoritasScreen
 import ec.edu.epn.rq_driver.uin.PerfilScreen
+import ec.edu.epn.rq_driver.uin.RecuperarCuentaScreen
+import ec.edu.epn.rq_driver.uin.LogInScreen
+import ec.edu.epn.rq_driver.uin.SignUpScreen
 import ec.edu.epn.rq_driver.uin.loginSignup.RecuperarCuentaScreen
 import ec.edu.epn.rq_driver.uin.loginSignup.LogInScreen
 import ec.edu.epn.rq_driver.uin.RutaDetalleScreen
@@ -60,6 +63,7 @@ fun AppNavigation(
         NavHost(
             navController = navController,
             startDestination = if (tieneAcceso) "explora" else if (esNuevoUsuario == true) "signup" else "login",
+
             modifier = Modifier
                 .fillMaxSize()  // ✅ Asegurar que el NavHost use el espacio correctamente
                 .padding(innerPadding)  // ✅ Evita que el contenido se superponga con el NavBar
@@ -94,7 +98,28 @@ fun AppNavigation(
             composable("recuperar") { RecuperarCuentaScreen(navController) }
 
             // Pantallas de la barra de navegación
-            composable("explora") { ExploraScreen(navController) }
+            composable(
+                "explora?startLat={startLat}&startLng={startLng}&endLat={endLat}&endLng={endLng}",
+                arguments = listOf(
+                    navArgument("startLat") { type = NavType.FloatType },
+                    navArgument("startLng") { type = NavType.FloatType },
+                    navArgument("endLat") { type = NavType.FloatType },
+                    navArgument("endLng") { type = NavType.FloatType }
+                )
+            ) { backStackEntry ->
+                val startLat = backStackEntry.arguments?.getFloat("startLat") ?: 0f
+                val startLng = backStackEntry.arguments?.getFloat("startLng") ?: 0f
+                val endLat = backStackEntry.arguments?.getFloat("endLat") ?: 0f
+                val endLng = backStackEntry.arguments?.getFloat("endLng") ?: 0f
+
+                ExploraScreen(
+                    navController = navController,
+                    startLat = startLat,
+                    startLng = startLng,
+                    endLat = endLat,
+                    endLng = endLng
+                )
+            }
             composable("crearuta") { CreaRutaScreen(navController) }
             composable("favoritas") { FavoritasScreen(navController) }
             composable("perfil") { PerfilScreen(navController, authVM::cerrarSesion) }
@@ -145,6 +170,7 @@ fun AppNavigation(
             composable("updateTelefono") { UserPhoneScreen(navController) }
             composable("updateEmail") { UserEmailScreen(navController) }
             composable("updateHouse") { UserHouseScreen(navController) }
+
         }
     }
 }

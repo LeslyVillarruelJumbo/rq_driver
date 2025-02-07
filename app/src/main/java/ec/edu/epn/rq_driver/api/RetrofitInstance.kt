@@ -1,6 +1,5 @@
 package ec.edu.epn.rq_driver.api
 
-object RetrofitInstance
 import ec.edu.epn.rq_driver.BuildConfig
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -14,5 +13,7 @@ object RetrofitInstance {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
+
+    val apiDeUsuarios: ApiDeUsuarios = retrofitBuilder.create(ApiDeUsuarios::class.java)
 
 }

@@ -1,6 +1,5 @@
 package ec.edu.epn.rq_driver.model
 
-import android.net.Uri
 import com.google.gson.annotations.SerializedName
 import java.util.Date
 

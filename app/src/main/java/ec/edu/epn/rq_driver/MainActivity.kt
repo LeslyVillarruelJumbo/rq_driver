@@ -19,7 +19,6 @@ import androidx.navigation.compose.rememberNavController
 import com.google.android.libraries.places.api.Places
 import ec.edu.epn.rq_driver.navigation.AppNavigation
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
@@ -34,6 +33,8 @@ import ec.edu.epn.rq_driver.viewmodel.PerfilViewModel
 class MainActivity : ComponentActivity() {
     private val authViewModel: AuthViewModel by viewModels()
     private val perfilViewModel: PerfilViewModel by viewModels()
+
+    private lateinit var clienteFusedLocation: FusedLocationProviderClient
 
 
     private lateinit var clienteGoogleOneTap: SignInClient
@@ -53,22 +54,6 @@ class MainActivity : ComponentActivity() {
 
         clienteGoogleOneTap = Identity.getSignInClient(this)
 
-        enableEdgeToEdge()
-        setContent {
-            Rq_driverTheme {
-                val navController = rememberNavController() // Inicializa el controlador de navegación
-                
-            }
-        }
-
-    }
-
-    AppNavigation(navController, authViewModel, perfilViewModel)
-    private lateinit var clienteFusedLocation: FusedLocationProviderClient
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
         // Inicializar Google Places API
         if (!Places.isInitialized()) {
             Places.initialize(applicationContext, "AIzaSyBxmMvFa-cnkBefCz59gBC_75DgG4ZyCdw")
@@ -83,17 +68,27 @@ class MainActivity : ComponentActivity() {
             obtenerUbicacionActual()
         }
 
+        enableEdgeToEdge()
         setContent {
-            val navController = rememberNavController() // Inicializa el controlador de navegación
-            val logged = remember { mutableStateOf(false) }
+            Rq_driverTheme {
+                val navController =
+                    rememberNavController() // Inicializa el controlador de navegación
+                AppNavigation(navController, authViewModel, perfilViewModel)
 
-            AppNavigation(navController, logged = logged)
+            }
         }
+
     }
 
     private fun tienePermisosUbicacion(): Boolean {
-        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        return ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun solicitarPermisosUbicacion() {
@@ -145,7 +140,7 @@ class MainActivity : ComponentActivity() {
                 Log.e("Ubicacion", "No se pudo obtener la ubicación")
 
 
-
+            }
         }
     }
 }

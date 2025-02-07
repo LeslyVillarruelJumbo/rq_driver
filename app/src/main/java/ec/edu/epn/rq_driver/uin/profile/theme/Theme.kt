@@ -1,5 +1,5 @@
 
-package ec.edu.epn.rq_driver.uin.profile.ui.theme
+package ec.edu.epn.rq_driver.uin.profile.theme
 
 import android.app.Activity
 
@@ -12,6 +12,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import ec.edu.epn.rq_driver.ui.theme.Typography
 
 private val DarkColorScheme = darkColorScheme(
   primary = Purple80,
@@ -36,7 +37,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun Rq_driverTheme(
+fun Rq_userTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
   // Dynamic color is available on Android 12+
   dynamicColor: Boolean = true,

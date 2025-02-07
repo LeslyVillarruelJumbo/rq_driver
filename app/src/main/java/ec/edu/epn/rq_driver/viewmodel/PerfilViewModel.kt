@@ -29,7 +29,7 @@ class PerfilViewModel : ViewModel() {
 
     private fun obtenerAPI() {
         try {
-            apiDelPerfil.value = RetrofitInstance.apiDeUsuarios
+            apiDelPerfil.value = RetrofitInstance.conductorApi
             Log.d("ConductorViewModel", "Creación correcta de API: ${apiDelPerfil.value}")
         } catch (e: Exception) {
             e.printStackTrace()
@@ -88,7 +88,7 @@ class PerfilViewModel : ViewModel() {
     fun registrarConductor(conductor: Conductor) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val res = RetrofitInstance.apiDeUsuarios.crearNuevoUsuario(conductor)
+                val res = RetrofitInstance.conductorApi.crearNuevoUsuario(conductor)
                 if (res.isSuccessful) {
                     Log.d("ConductorViewModel", "Conductor registrado con éxito (${res.message()})")
                     _mensajeDeSuscripcion.value = "Suscripción exitosa"

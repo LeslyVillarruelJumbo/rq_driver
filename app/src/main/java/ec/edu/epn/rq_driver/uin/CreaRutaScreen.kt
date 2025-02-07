@@ -232,17 +232,18 @@ fun CreaRutaScreen(navController: NavController, rutaViewModel: RutaViewModel = 
                 onClick = {
                     if (startPoint.isNotEmpty() && endPoint.isNotEmpty()) {
                         val nuevaRuta = Ruta(
-                            departureTime = time,
-                            routeState = false, // Esto puede cambiar dependiendo de la lógica de tu aplicación
-                            driverId = "67a3ec2da46723a987f76feb", // Agrega el ID del conductor
-                            startLong = startCoords?.longitude ?: -0.250709,
-                            finalLong = endCoords?.longitude ?: -0.223709,
-                            startLat = startCoords?.latitude ?: -0.250709,
-                            finalLat = endCoords?.latitude ?: -0.223709,
-                            routeName = "Ruta",
-                            startPoint = startPoint,
-                            finalPoint = endPoint,
-                            availableSeats = seats
+                            horaPartida = time,
+                            estadoRuta = false, // Esto puede cambiar dependiendo de la lógica de tu aplicación
+                            conductorID = "67a3ec2da46723a987f76feb", // Agrega el ID del conductor
+                            longitudInicial = startCoords?.longitude ?: -0.250709,
+                            longitudFinal = endCoords?.longitude ?: -0.223709,
+                            latitudInicial = startCoords?.latitude ?: -0.250709,
+                            latitudFinal = endCoords?.latitude ?: -0.223709,
+                            nombreRuta = "Ruta",
+                            puntoInicial = startPoint,
+                            puntoFinal = endPoint,
+                            asientosDisponibles = seats,
+                            rutaID = null
                         )
 
                         // Llamamos a la función para crear la ruta

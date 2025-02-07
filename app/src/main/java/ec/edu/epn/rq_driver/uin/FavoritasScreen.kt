@@ -39,7 +39,7 @@ fun FavoritasScreen(navController: NavController, rutaViewModel: RutaViewModel =
     var index = 0;
     rutas2.forEach { ruta ->
         index = index + 1
-        val nuevaRuta = Ruta("${ruta.routeName} $index", "${ruta.startPoint} - ${ruta.finalPoint}")
+        val nuevaRuta = Ruta("${ruta.nombreRuta} $index", "${ruta.puntoInicial} - ${ruta.puntoFinal}")
         rutasCreadas.add(nuevaRuta)
     }
 

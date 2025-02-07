@@ -20,9 +20,6 @@ import ec.edu.epn.rq_driver.uin.ExploraScreen
 import ec.edu.epn.rq_driver.uin.CreaRutaScreen
 import ec.edu.epn.rq_driver.uin.FavoritasScreen
 import ec.edu.epn.rq_driver.uin.PerfilScreen
-import ec.edu.epn.rq_driver.uin.RecuperarCuentaScreen
-import ec.edu.epn.rq_driver.uin.LogInScreen
-import ec.edu.epn.rq_driver.uin.SignUpScreen
 import ec.edu.epn.rq_driver.uin.loginSignup.RecuperarCuentaScreen
 import ec.edu.epn.rq_driver.uin.loginSignup.LogInScreen
 import ec.edu.epn.rq_driver.uin.RutaDetalleScreen
@@ -62,7 +59,7 @@ fun AppNavigation(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = if (tieneAcceso) "explora" else if (esNuevoUsuario == true) "signup" else "login",
+            startDestination = if (tieneAcceso) "crearuta" else if (esNuevoUsuario == true) "signup" else "login",
 
             modifier = Modifier
                 .fillMaxSize()  // ✅ Asegurar que el NavHost use el espacio correctamente

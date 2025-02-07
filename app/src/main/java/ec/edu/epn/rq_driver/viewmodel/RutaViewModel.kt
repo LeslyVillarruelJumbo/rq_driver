@@ -28,7 +28,7 @@ class RutaViewModel : ViewModel() {
     fun crearRuta(ruta: Ruta) {
         viewModelScope.launch {
             try {
-                val rutaCreada = RetrofitInstance.api.crearRuta(ruta)
+                val rutaCreada = RetrofitInstance.rutaApi.crearRuta(ruta)
                 // Aquí puedes actualizar el estado, dependiendo de lo que necesites hacer después de crear la ruta
                 _rutas.value = _rutas.value.toMutableList().apply { add(rutaCreada) }
                 _esExito.value = true
@@ -45,7 +45,7 @@ class RutaViewModel : ViewModel() {
     fun obtenerRutas(driverId: String) {
         viewModelScope.launch {
             try {
-                val rutaApi = RetrofitInstance.api
+                val rutaApi = RetrofitInstance.rutaApi
                 val rutasObtenidas = rutaApi.obtenerRutas(driverId) // Pasamos el driverId en la URL
                 _rutas.value = rutasObtenidas
             } catch (e: Exception) {
@@ -57,7 +57,7 @@ class RutaViewModel : ViewModel() {
     fun obtenerUsuariosRuta(rutaId: String) {
         viewModelScope.launch {
             try {
-                val rutaApi = RetrofitInstance.api
+                val rutaApi = RetrofitInstance.rutaApi
                 val usuariosRuta = rutaApi.usuariosRuta(rutaId)
                 _usuarios.value = usuariosRuta
             } catch (e: Exception) {

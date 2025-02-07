@@ -6,15 +6,22 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitInstance {
     private const val BASE_URL = "http://192.168.100.130:3000"
 
-    val api: RutaApi by lazy {
+    val rutaApi: RutaApi by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(RutaApi::class.java)
     }
+    //val conductorApi: ApiDeUsuarios = retrofitBuilder.create(ApiDeUsuarios::class.java)
 
-    //val apiDeUsuarios: ApiDeUsuarios = retrofitBuilder.create(ApiDeUsuarios::class.java)
+    val conductorApi: ApiDeUsuarios by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiDeUsuarios::class.java)
+    }
 
   val api: UsuarioApi by lazy {
     Retrofit.Builder()

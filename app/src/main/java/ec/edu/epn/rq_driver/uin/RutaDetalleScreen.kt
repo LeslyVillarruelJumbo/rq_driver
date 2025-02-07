@@ -43,13 +43,13 @@ fun RutaDetalleScreen(navController: NavController, rutaNombre: String, rutaView
     var endLongitude = -99.1530 // Ejemplo de longitud de destino
     rutas2.forEach { ruta ->
         index = index + 1
-        val nombreRuta = "${ruta.routeName} $index"
+        val nombreRuta = "${ruta.nombreRuta} $index"
         if(nombreRuta == rutaNombre) {
-            route = RutaDetalle(ruta.routeName, ruta.startPoint, ruta.finalPoint, ruta.departureTime, ruta.availableSeats.toInt())
-            startLatitude = ruta.startLat.toDouble()
-            startLongitude = ruta.startLong.toDouble()
-            endLatitude = ruta.finalLat.toDouble()
-            endLongitude = ruta.finalLong.toDouble()
+            route = RutaDetalle(ruta.nombreRuta, ruta.puntoInicial, ruta.puntoFinal, ruta.horaPartida, ruta.asientosDisponibles.toInt())
+            startLatitude = ruta.latitudInicial.toDouble()
+            startLongitude = ruta.longitudInicial.toDouble()
+            endLatitude = ruta.latitudFinal.toDouble()
+            endLongitude = ruta.longitudFinal.toDouble()
         }
     }
 

@@ -1,7 +1,12 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
+    // Google Services
+    alias(libs.plugins.gms.google.services)
 }
 
 android {
@@ -16,6 +21,22 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            "String",
+            "WEB_CLIENT_ID",
+            "\"${gradleLocalProperties(rootDir, project.providers).getProperty("web-client.id")}\""
+        )
+        buildConfigField(
+            "String",
+            "SERVER_URL",
+            "\"${gradleLocalProperties(rootDir, project.providers).getProperty("server.url")}\""
+        )
+        buildConfigField(
+            "String",
+            "SERVER_PORT",
+            "\"${gradleLocalProperties(rootDir, project.providers).getProperty("server.port")}\""
+        )
     }
 
     buildTypes {
@@ -36,11 +57,11 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -49,19 +70,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-
-    // navegacion
-    implementation(libs.androidx.navigation.compose)
-
-    // Google Maps
-    implementation(libs.play.services.maps)
-    implementation(libs.play.services.location)
-    implementation(libs.maps.compose)
-    // Dependencias para obtener ubicación
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    // marcelo
-    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.lifecycle.viewmodel.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -74,4 +83,35 @@ dependencies {
     // APIs
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
+
+
+    // Navegación
+    implementation(libs.androidx.navigation.compose)
+
+    // Enhanced UI
+    implementation(libs.androidx.material.icons.extended)
+
+    // Google Maps - APIs y Servicios
+    implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
+    implementation(libs.maps.compose)
+
+    // Dependencias adicionales (por ejemplo, Material Icons)
+    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.ui) // Verifica que la versión sea la correcta
+    implementation(libs.material3)
+    implementation(libs.androidx.foundation.layout.android) // Si usas Material3
+    implementation(libs.androidx.fragment.ktx)
+
+    // APIs
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth.ktx)
+
+    // Google Play Services
+    implementation(libs.play.services.base)
+    implementation(libs.play.services.auth)
 }

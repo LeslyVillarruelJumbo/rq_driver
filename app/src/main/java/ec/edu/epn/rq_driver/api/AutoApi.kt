@@ -1,5 +1,4 @@
 package ec.edu.epn.rq_driver.api
-
 import ec.edu.epn.rq_driver.model.Auto
 import retrofit2.http.Body
 import retrofit2.http.GET

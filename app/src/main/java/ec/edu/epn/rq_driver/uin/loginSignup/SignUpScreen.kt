@@ -1,13 +1,9 @@
-package ec.edu.epn.rq_driver.uin
+package ec.edu.epn.rq_driver.uin.loginSignup
 
-import ec.edu.epn.rq_driver.R
-import ec.edu.epn.rq_driver.components.Avatar
-import ec.edu.epn.rq_driver.components.Input
-import ec.edu.epn.rq_driver.components.Utils
-import ec.edu.epn.rq_driver.navigation.AppNavigation
-import ec.edu.epn.rq_driver.ui.theme.Verde
-import androidx.compose.foundation.gestures.scrollBy
+import android.os.Build
 import android.os.Handler
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
@@ -59,7 +56,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -68,6 +65,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import ec.edu.epn.rq_driver.R
+import ec.edu.epn.rq_driver.components.Avatar
+import ec.edu.epn.rq_driver.components.Input
+import ec.edu.epn.rq_driver.components.Utils
+import ec.edu.epn.rq_driver.navigation.AppNavigation
+import ec.edu.epn.rq_driver.ui.theme.Verde
+import ec.edu.epn.rq_driver.viewmodel.AuthViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -86,25 +90,21 @@ fun SignUpScreen(nav: NavHostController = rememberNavController()) {
     var columnHeight by remember { mutableIntStateOf(0) }
     val textFieldPositions = remember { mutableMapOf<Int, Int>() }
     val keyboardHeight = WindowInsets.ime.getBottom(LocalDensity.current)
+    val botSystemBar = WindowInsets.navigationBars.getBottom(LocalDensity.current)
     var focusedInputIndex: Int? by remember { mutableStateOf(null) }
-
-    LaunchedEffect(keyboardHeight) {
-        focusedInputIndex?.let {
-            val yPosition: Int = textFieldPositions[it]!!
-            if (yPosition <= 0) {
-                scrollState.scrollTo(yPosition)
-            } else if (yPosition > (keyboardHeight - scrollState.value)) {
-                scrollState.scrollBy(keyboardHeight.toFloat())
-            }
-        }
-    }
+    val firstRender = remember { mutableMapOf<Int, Boolean>() }
 
     val modificador = { inputIndex: Int ->
+        if (firstRender[inputIndex] == null) firstRender[inputIndex] = true
         Modifier
             .onGloballyPositioned {
-                textFieldPositions[inputIndex] = it.positionInRoot().y.dp.value.toInt()
+                if (firstRender[inputIndex] == false) return@onGloballyPositioned
+                textFieldPositions[inputIndex] = it.positionInWindow().y.dp.value.toInt()
+                firstRender[inputIndex] = false
+                Log.d("SCROLL", "$inputIndex — ${it.positionInWindow().y.dp.value.toInt()}")
             }
             .onFocusChanged {
+                if (firstRender[inputIndex] == true) return@onFocusChanged
                 if (it.isFocused) {
                     focusedInputIndex = inputIndex
                 }
@@ -140,6 +140,19 @@ fun SignUpScreen(nav: NavHostController = rememberNavController()) {
                     nav.navigate("login")
                 }
             },1000)
+        }
+    }
+
+    LaunchedEffect(keyboardHeight) {
+        focusedInputIndex?.let {
+
+            val yPosition: Int = textFieldPositions[it]!!
+            val itemRelativeHeight = columnHeight - yPosition
+            val keyboardRealHeight = keyboardHeight - botSystemBar
+
+            if (keyboardRealHeight > itemRelativeHeight) {
+                scrollState.scrollTo(keyboardRealHeight)
+            }
         }
     }
 
@@ -276,6 +289,7 @@ fun InfoTooltipButton(modifier: Modifier, tooltip: String) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(
     showSystemUi = true, showBackground = false,
     device = "spec:width=720px,height=1612px,dpi=320,navigation=buttons", name = "Tekno",
@@ -284,5 +298,5 @@ fun InfoTooltipButton(modifier: Modifier, tooltip: String) {
 @Composable
 private fun SignUpPreview() {
     val navController = rememberNavController()
-    AppNavigation(navController)
+    AppNavigation(navController, AuthViewModel())
 }

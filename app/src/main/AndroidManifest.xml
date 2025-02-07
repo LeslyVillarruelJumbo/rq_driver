@@ -2,11 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Permisos necesarios para localizacion -->
-    <uses-permission android:name="android.permission.INTERNET" />
+    <!--Permisos para localización-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
 
     <application
         android:allowBackup="true"
@@ -17,6 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Rq_driver"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
         <!-- Clave de API de Google Maps -->
@@ -26,8 +26,8 @@
 
         <activity
             android:name=".MainActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.Rq_driver">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

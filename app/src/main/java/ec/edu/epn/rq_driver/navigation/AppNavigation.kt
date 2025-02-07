@@ -32,44 +32,72 @@ import ec.edu.epn.rq_driver.uin.profile.UserNameScreen
 import ec.edu.epn.rq_driver.uin.profile.UserPhoneScreen
 import ec.edu.epn.rq_driver.uin.profile.UserSettingsScreen
 import ec.edu.epn.rq_driver.viewmodel.AuthViewModel
+import ec.edu.epn.rq_driver.viewmodel.PerfilViewModel
 
-@RequiresApi(Build.VERSION_CODES.O)
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun AppNavigation(
     navController: NavHostController,
-    authViewModel: AuthViewModel,
+    authVM: AuthViewModel,
+    perfilVM: PerfilViewModel,
     modifier: Modifier = Modifier
 ) {
-    val usuarioAutenticado by authViewModel.usuarioAutenticado.collectAsState()
-    val errorMessage by authViewModel.errorMessage.collectAsState()
+    val usuarioSeHaAutenticado by authVM.usuarioAutenticado.collectAsState()
+    val esNuevoUsuario by authVM.esNuevoUsuario.collectAsState()
+    val authMensajeDeError by authVM.mensajeDeError.collectAsState()
+    val authEstaCargando by authVM.estaCargando.collectAsState()
+    val authUsuarioRecuperado by authVM.usuarioRecuperado.collectAsState()
+    val cuentaDeFirebase by authVM.usuarioDeFirebase.collectAsState()
+    val errorAlCrearUsuario by authVM.errorAlCrearUsuario.collectAsState()
+    val usuarioCreado by authVM.usuarioCreado.collectAsState()
+
+    val tieneAcceso = usuarioSeHaAutenticado && (esNuevoUsuario == false)
 
     Scaffold(
-        bottomBar = { if (usuarioAutenticado) NavBar(navController) },  // ✅ Se asegura que el NavBar esté presente
+        bottomBar = { if (tieneAcceso) NavBar(navController) },  // ✅ Se asegura que el NavBar esté presente
         modifier = modifier
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = if (usuarioAutenticado) "explora" else "login",
+            startDestination = if (tieneAcceso) "explora" else if (esNuevoUsuario == true) "signup" else "login",
             modifier = Modifier
                 .fillMaxSize()  // ✅ Asegurar que el NavHost use el espacio correctamente
                 .padding(innerPadding)  // ✅ Evita que el contenido se superponga con el NavBar
         ) {
 
             // Pantallas Módulo LogIn/SignUp
-            composable("login") { LogInScreen(
-                nav = navController,
-                onLoginSuccess = { correo, contrasena -> authViewModel.iniciarSesion(correo, contrasena) },
-                onGoogleLogin = { (navController.context as? MainActivity)?.iniciarGoogleOneTap() },
-                errorMessage = errorMessage
-            ) }
-            composable("signup") { SignUpScreen(navController) }
+            composable("login") {
+                LogInScreen(
+                    nav = navController,
+                    perfilVM = perfilVM,
+                    estaCargando = authEstaCargando,
+                    onAccederConCorreo = { correo, contrasena -> authVM.iniciarSesionConCorreo(correo, contrasena)},
+                    onAccederConGoogle = { (navController.context as? MainActivity)?.iniciarGoogleOneTap() },
+                    mensajeDeError = authMensajeDeError
+                )
+            }
+            composable("signup") {
+                SignUpScreen(
+                    nav = navController,
+                    usuarioSeHaAutenticado = usuarioSeHaAutenticado,
+                    cancelarSuscripcion = authVM::cancelarProcesoDeRegistro,
+                    recuperarInfoDeGoogle = authVM::recuperarInfoDeNuevoSuscriptor,
+                    registrarUsuario = perfilVM::registrarConductor,
+                    registrarUsuarioEnFirebase = authVM::crearUsuarioConCorreo,
+                    errorAlCrearUsuario = errorAlCrearUsuario,
+                    usuarioRecuperadoConOneTap = authUsuarioRecuperado,
+                    usuarioDeFirebase = cuentaDeFirebase,
+                    usuarioCreado = usuarioCreado,
+                    perfilVM = perfilVM
+                )
+            }
             composable("recuperar") { RecuperarCuentaScreen(navController) }
 
             // Pantallas de la barra de navegación
             composable("explora") { ExploraScreen(navController) }
             composable("crearuta") { CreaRutaScreen(navController) }
             composable("favoritas") { FavoritasScreen(navController) }
-            composable("perfil") { PerfilScreen(navController, authViewModel::cerrarSesion) }
+            composable("perfil") { PerfilScreen(navController, authVM::cerrarSesion) }
 
             // Pantallas adicionales de rutas
             composable("ruta_detalle/{rutaNombre}") { backStackEntry ->

@@ -1,4 +1,4 @@
-package ec.edu.epn.rq_user.uin.profile.ui.theme
+package ec.edu.epn.rq_driver.uin.profile.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

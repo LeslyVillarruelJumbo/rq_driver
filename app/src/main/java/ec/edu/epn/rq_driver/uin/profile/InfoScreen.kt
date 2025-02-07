@@ -1,4 +1,4 @@
-package ec.edu.epn.rq_user.uin.profile
+package ec.edu.epn.rq_driver.uin.profile
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -35,8 +35,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import ec.edu.epn.rq_user.R
-import ec.edu.epn.rq_user.model.Usuario
+import ec.edu.epn.rq_driver.R
+import ec.edu.epn.rq_driver.model.Usuario
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter.ofPattern
 
@@ -46,6 +46,7 @@ fun UserInfoScreen(navController: NavController) {
   val formatter = ofPattern("MM/dd/yyyy")
   val mockUser = Usuario(
     nombre = "Sebastian",
+    firesbaseId = "1",
     apellido = "Cruz",
     email = "sebas.cruz750@gmail.com",
     telefono = "0978601625",

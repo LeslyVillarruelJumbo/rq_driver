@@ -21,12 +21,12 @@ import ec.edu.epn.rq_driver.uin.PerfilScreen
 import ec.edu.epn.rq_driver.uin.RecuperarCuentaScreen
 import ec.edu.epn.rq_driver.uin.LogInScreen
 import ec.edu.epn.rq_driver.uin.SignUpScreen
-import ec.edu.epn.rq_user.uin.profile.UserEmailScreen
-import ec.edu.epn.rq_user.uin.profile.UserHouseScreen
-import ec.edu.epn.rq_user.uin.profile.UserInfoScreen
-import ec.edu.epn.rq_user.uin.profile.UserNameScreen
-import ec.edu.epn.rq_user.uin.profile.UserPhoneScreen
-import ec.edu.epn.rq_user.uin.profile.UserSettingsScreen
+import ec.edu.epn.rq_driver.uin.profile.UserEmailScreen
+import ec.edu.epn.rq_driver.uin.profile.UserHouseScreen
+import ec.edu.epn.rq_driver.uin.profile.UserInfoScreen
+import ec.edu.epn.rq_driver.uin.profile.UserNameScreen
+import ec.edu.epn.rq_driver.uin.profile.UserPhoneScreen
+import ec.edu.epn.rq_driver.uin.profile.UserSettingsScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable

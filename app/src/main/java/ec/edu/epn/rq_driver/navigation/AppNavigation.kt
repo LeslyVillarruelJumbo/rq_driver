@@ -40,13 +40,34 @@ fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifie
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "login",
+            startDestination = "crearuta",
             modifier = Modifier
                 .fillMaxSize()  // ✅ Asegurar que el NavHost use el espacio correctamente
                 .padding(innerPadding)  // ✅ Evita que el contenido se superponga con el NavBar
         ) {
             // Pantallas de la barra de navegación
-            composable("explora") { ExploraScreen(navController) }
+            composable(
+                "explora?startLat={startLat}&startLng={startLng}&endLat={endLat}&endLng={endLng}",
+                arguments = listOf(
+                    navArgument("startLat") { type = NavType.FloatType },
+                    navArgument("startLng") { type = NavType.FloatType },
+                    navArgument("endLat") { type = NavType.FloatType },
+                    navArgument("endLng") { type = NavType.FloatType }
+                )
+            ) { backStackEntry ->
+                val startLat = backStackEntry.arguments?.getFloat("startLat") ?: 0f
+                val startLng = backStackEntry.arguments?.getFloat("startLng") ?: 0f
+                val endLat = backStackEntry.arguments?.getFloat("endLat") ?: 0f
+                val endLng = backStackEntry.arguments?.getFloat("endLng") ?: 0f
+
+                ExploraScreen(
+                    navController = navController,
+                    startLat = startLat,
+                    startLng = startLng,
+                    endLat = endLat,
+                    endLng = endLng
+                )
+            }
             composable("crearuta") { CreaRutaScreen(navController) }
             composable("favoritas") { FavoritasScreen(navController) }
             composable("perfil") { PerfilScreen(navController) }

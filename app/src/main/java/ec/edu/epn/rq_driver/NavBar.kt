@@ -20,8 +20,8 @@ import androidx.navigation.NavHostController
 
 @Composable
 fun NavBar(navController: NavHostController, modifier: Modifier = Modifier) {
-    val items = listOf("Explora", "Ver rutas", "Rutas favoritas", "Perfil")
-    val routes = listOf("explora", "crearuta", "favoritas", "perfil")
+    val items = listOf("Crear rutas", "Rutas", "Perfil")
+    val routes = listOf("crearuta", "favoritas", "perfil")
 
     val selectedIcons = listOf(
         Icons.Filled.Place,
@@ -58,7 +58,7 @@ fun NavBar(navController: NavHostController, modifier: Modifier = Modifier) {
                 selected = selected,
                 onClick = {
                     navController.navigate(routes[index]) {
-                        popUpTo("explora") { inclusive = false }
+                        popUpTo("crearuta") { inclusive = false }
                         launchSingleTop = true
                     }
                 },

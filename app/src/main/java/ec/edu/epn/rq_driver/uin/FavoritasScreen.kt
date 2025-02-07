@@ -1,5 +1,6 @@
 package ec.edu.epn.rq_driver.uin
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -15,19 +16,32 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavController
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import ec.edu.epn.rq_driver.viewmodel.RutaViewModel
 
 @Composable
-fun FavoritasScreen(navController: NavController) {
-    val rutas = listOf(
-        Ruta("Ruta 1", "Av. America - Cuero y Caicedo"),
-        Ruta("Ruta 2", "Av. 10 de Agosto - La Carolina"),
-        Ruta("Ruta 3", "Av. Patria - La Joya")
-    )
+fun FavoritasScreen(navController: NavController, rutaViewModel: RutaViewModel = viewModel()) {
+    // Obtener las rutas desde el ViewModel
+    val rutas2 = rutaViewModel.rutas.collectAsState().value
+
+    // Llamar a la función obtenerRutas al cargar la pantalla
+    LaunchedEffect(Unit) {
+        rutaViewModel.obtenerRutas("67a3ec2da46723a987f76feb") // Reemplaza "driverId" con el id real del conductor
+    }
+    val rutasCreadas = mutableListOf<Ruta>()
+    var index = 0;
+    rutas2.forEach { ruta ->
+        index = index + 1
+        val nuevaRuta = Ruta("${ruta.routeName} $index", "${ruta.startPoint} - ${ruta.finalPoint}")
+        rutasCreadas.add(nuevaRuta)
+    }
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -42,8 +56,7 @@ fun FavoritasScreen(navController: NavController) {
             modifier = Modifier.padding(bottom = 16.dp, top = 60.dp) // Ajustes de padding para el título
         )
 
-        // Mostrar las tarjetas de rutas
-        rutas.forEach { ruta ->
+        rutasCreadas.forEach { ruta ->
             RutaCard(ruta = ruta, navController = navController)
         }
     }
@@ -57,6 +70,7 @@ fun RutaCard(ruta: Ruta, navController: NavController) {
             .fillMaxWidth() // Asegura que la tarjeta ocupe el ancho completo
             .clickable {
                 // Navegar a la pantalla de detalles con el nombre de la ruta
+                Log.d("Ruta Card", "Navegando a la pantalla de detalles con el nombre: ${ruta.nombre}")
                 navController.navigate("ruta_detalle/${ruta.nombre}")
             },
         shape = RoundedCornerShape(8.dp),

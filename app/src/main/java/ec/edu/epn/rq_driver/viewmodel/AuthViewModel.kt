@@ -75,6 +75,7 @@ class AuthViewModel : ViewModel() {
             res.addOnCompleteListener {
                 _esNuevoUsuario.value = res.result.additionalUserInfo?.isNewUser
                 _estaCargando.value = esNuevoUsuario.value == null
+                _usuarioDeFirebase.value = res.result.user
             }
             Log.d("AuthViewModel", "Resultado Firebase:\n" +
                     "\t| uid: ${res.result.user?.uid}\n" +
@@ -84,15 +85,21 @@ class AuthViewModel : ViewModel() {
                     "\t| TenantID: ${res.result.user?.tenantId}\n" +
                     "\t| Profile: ${res.result.additionalUserInfo?.profile}\n" +
                     "\t| New?: ${res.result.additionalUserInfo?.isNewUser}")
-        } else when {
-            res.exception?.message?.contains("The email address is badly formatted") == true -> {
-                _mensajeDeError.value = "!! Ingrese una dirección de correo válida !!"
-            }
-            res.exception?.message?.contains("The supplied auth credential is incorrect") == true -> {
-                _mensajeDeError.value = "Correo o contraseña incorrectos"
-            }
-            else -> {
-                _mensajeDeError.value = res.exception?.message ?: "Error interno desconocido${origen}"
+        } else {
+            _estaCargando.value = false
+            when {
+                res.exception?.message?.contains("The email address is badly formatted") == true -> {
+                    _mensajeDeError.value = "!! Ingrese una dirección de correo válida !!"
+                }
+
+                res.exception?.message?.contains("The supplied auth credential is incorrect") == true -> {
+                    _mensajeDeError.value = "Correo o contraseña incorrectos"
+                }
+
+                else -> {
+                    _mensajeDeError.value =
+                        res.exception?.message ?: "Error interno desconocido${origen}"
+                }
             }
         }
 
@@ -103,6 +110,10 @@ class AuthViewModel : ViewModel() {
     //  Verificación del estado de sesión desde Firebase en cada reinicio
     private fun verificarSesion() {
         _usuarioAutenticado.value = firebaseAuth.currentUser != null
+        firebaseAuth.currentUser?.let {
+            _usuarioDeFirebase.value = it
+            _esNuevoUsuario.value = false
+        }
     }
 
 

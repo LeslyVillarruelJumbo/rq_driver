@@ -1,5 +1,5 @@
 
-package ec.edu.epn.rq_driver.uin.profile.ui.theme
+package ec.edu.epn.rq_driver.uin.profile.theme
 
 
 import androidx.compose.material3.Typography

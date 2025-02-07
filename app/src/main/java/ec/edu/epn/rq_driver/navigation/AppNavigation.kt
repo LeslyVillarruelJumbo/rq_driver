@@ -117,7 +117,7 @@ fun AppNavigation(
                     endLng = endLng
                 )
             }
-            composable("crearuta") { CreaRutaScreen(navController) }
+            composable("crearuta") { CreaRutaScreen(navController, usuarioDeFirebase = cuentaDeFirebase, perfilVM = perfilVM) }
             composable("favoritas") { FavoritasScreen(navController) }
             composable("perfil") { PerfilScreen(navController, authVM::cerrarSesion) }
 
@@ -139,7 +139,7 @@ fun AppNavigation(
                     navArgument("seats") { type = NavType.IntType }
                 )
             ) {
-                CreaRutaScreen(navController = navController)
+                CreaRutaScreen(navController = navController, perfilVM = perfilVM)
             }
 
             // Pantalla para iniciar ruta en Google Maps

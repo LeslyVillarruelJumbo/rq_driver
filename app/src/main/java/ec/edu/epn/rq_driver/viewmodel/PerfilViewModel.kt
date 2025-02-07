@@ -3,7 +3,7 @@ package ec.edu.epn.rq_driver.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ec.edu.epn.rq_driver.api.ApiDeUsuarios
+import ec.edu.epn.rq_driver.api.ConductorApi
 import ec.edu.epn.rq_driver.api.RetrofitInstance
 import ec.edu.epn.rq_driver.components.ErrorState
 import ec.edu.epn.rq_driver.model.Conductor
@@ -15,7 +15,7 @@ import org.json.JSONObject
 
 class PerfilViewModel : ViewModel() {
 
-    private val apiDelPerfil = MutableStateFlow<ApiDeUsuarios?>(null)
+    private val apiDelPerfil = MutableStateFlow<ConductorApi?>(null)
 
     private val _usuariosEncontrados = MutableStateFlow<List<Conductor>?>(emptyList())
     val usuariosEncontrados: StateFlow<List<Conductor>?> = _usuariosEncontrados
@@ -78,7 +78,7 @@ class PerfilViewModel : ViewModel() {
     }
 
     val encontrarUsuarioPorId: (String) -> Conductor? = { id ->
-        cargarDatos(_usuarioActual) { apiDelPerfil.value?.obtenerUsuarioPorId(id) }
+        cargarDatos(_usuarioActual) { apiDelPerfil.value?.obtenerPerfilDelConductor(id) }
     }
 
     val cargarListaDeUsuarios: () -> List<Conductor> = {
@@ -113,12 +113,15 @@ class PerfilViewModel : ViewModel() {
     }
 
     fun validarCorreo(input: String): ErrorState {
-        val emailPattern = Regex("[a-zA-Z\\d._-]+@[a-z]+\\.+[a-z]+")
+
+        val emailPattern = "[a-zA-Z\\d._-]+@[a-z]+\\.[a-z]+\\.?[a-z]+".toRegex()
+
         return when {
             input.trim().isEmpty() -> ErrorState(true, "Debe llenar el campo de correo")
-            !input.trim().matches(emailPattern) -> ErrorState(true, "El formato del correo no es correcto")
+            !( input.trim().matches(emailPattern) ) -> ErrorState(true, "El formato del correo no es correcto")
             else -> ErrorState(false)
         }
+
     }
 
     fun validarPassword(input: String): ErrorState {
@@ -136,6 +139,5 @@ class PerfilViewModel : ViewModel() {
             else -> ErrorState(false)
         }
     }
-
 
 }

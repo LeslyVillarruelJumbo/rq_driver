@@ -97,7 +97,7 @@ fun SignUpScreen(
     registrarUsuarioEnFirebase: (Context, String, String) -> Unit,
     errorAlCrearUsuario: Boolean? = null,
     usuarioRecuperadoConOneTap: Conductor?,
-    usuarioDeFirebase: FirebaseUser?,
+    usuarioDeFirebase: FirebaseUser? = null,
     usuarioCreado: FirebaseUser?,
     perfilVM: PerfilViewModel
 ) {
@@ -170,18 +170,6 @@ fun SignUpScreen(
                 condicion = true
             }
         }
-
-//        if(condicion) {
-//            submitted = true
-//            @Suppress("DEPRECATION")
-//            Handler().postDelayed({
-//                run {
-//                    nav.navigate("login")
-//                }
-//            },1000)
-//        } else {
-//            coroutineScope.launch { scrollState.scrollTo(0) }
-//        }
         if (!condicion) {
             coroutineScope.launch { scrollState.scrollTo(0) }
         }

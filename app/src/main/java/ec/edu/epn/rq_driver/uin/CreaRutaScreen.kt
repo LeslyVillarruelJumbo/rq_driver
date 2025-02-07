@@ -39,17 +39,28 @@ import com.google.android.libraries.places.api.model.AutocompletePrediction
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
+import com.google.firebase.auth.FirebaseUser
+import ec.edu.epn.rq_driver.model.Conductor
+import ec.edu.epn.rq_driver.viewmodel.PerfilViewModel
 import kotlinx.coroutines.delay
 
 @Composable
-fun CreaRutaScreen(navController: NavController, rutaViewModel: RutaViewModel = viewModel(), mapViewModel: MapViewModel = viewModel()) {
+fun CreaRutaScreen(navController: NavController, rutaViewModel: RutaViewModel = viewModel(), mapViewModel: MapViewModel = viewModel(), usuarioDeFirebase: FirebaseUser? = null, perfilVM: PerfilViewModel) {
     var startPoint by remember { mutableStateOf("") }
     var endPoint by remember { mutableStateOf("") }
     var time by remember { mutableStateOf("00:00") }
     var seats by remember { mutableIntStateOf(1) }
     var showMap by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
+    val conductor by perfilVM.usuarioActual.collectAsState()
 
+    LaunchedEffect(usuarioDeFirebase) {
+        usuarioDeFirebase?.let {
+            Log.d("CrearRutaScreen", "Intentando recuperar usuario con id → ${usuarioDeFirebase.uid}")
+            perfilVM.encontrarUsuarioPorId(usuarioDeFirebase.uid)
+            conductor?.let { Log.d("CrearRutaScreen", "Usuario recuperado → $conductor") }
+        }
+    }
 
     val context = LocalContext.current
 

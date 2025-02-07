@@ -59,6 +59,7 @@ import ec.edu.epn.rq_driver.viewmodel.AuthViewModel
 import ec.edu.epn.rq_driver.viewmodel.PerfilViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
 fun LogInScreen(
@@ -119,7 +120,7 @@ fun LogInScreen(
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
-                FormularioDeInicioDeSesion(onAccederConCorreo, mensajeDeError, estaCargando)
+                FormularioDeInicioDeSesion(onAccederConCorreo, mensajeDeError, estaCargando, botonDeSubmitPresionado, { botonDeSubmitPresionado = it })
 
                 Spacer(Modifier.height(5.dp))
 
@@ -222,7 +223,7 @@ fun EnlaceDeRecuperacionDeCuenta(onClick: () -> Unit = {}) {
     )
 }
 @Composable
-fun BotonCrearNuevaCuenta(onClick: () -> Unit = {}, enabled: Boolean = true) {
+fun BotonCrearNuevaCuenta(onClick: () -> Unit = {}, enabled: Boolean = true,) {
     OutlinedButton(
         onClick = onClick,
         enabled = enabled,
@@ -234,14 +235,17 @@ fun BotonCrearNuevaCuenta(onClick: () -> Unit = {}, enabled: Boolean = true) {
     }
 }
 @Composable
-fun BotonInicioConCorreo(onClick: () -> Unit, enabled: Boolean = true) {
+fun BotonInicioConCorreo(onClick: () -> Unit, enabled: Boolean = true, thisButtonSubmitted: Boolean = false, modificadorAnimacion: Modifier = Modifier) {
     Button(
         onClick = onClick,
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(containerColor = Verde),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Text("Iniciar Sesión", fontWeight = FontWeight.Bold)
+        if (thisButtonSubmitted)
+            AnimacionDeCarga(Modifier.align(Alignment.CenterVertically))
+        else
+            Text("Iniciar Sesión", fontWeight = FontWeight.Bold)
     }
 }
 @Composable
@@ -282,7 +286,9 @@ fun BotonAccederConGoogle(
 fun FormularioDeInicioDeSesion(
     onAccederConCorreo: (String, String) -> Unit,
     mensajeDeError: String?,
-    estaCargando: Boolean
+    estaCargando: Boolean,
+    botonDeSubmitPresionado: String? = null,
+    cambiarBotonDeSubmitPresionado: (String) -> Unit = {}
 ) {
 
     val user = remember { mutableStateOf("") }
@@ -314,8 +320,10 @@ fun FormularioDeInicioDeSesion(
         Spacer(Modifier.height(4.dp))
 
         BotonInicioConCorreo(
-            onClick = { onAccederConCorreo(user.value, pass.value) },
-            enabled = !estaCargando
+            onClick = { onAccederConCorreo(user.value, pass.value); cambiarBotonDeSubmitPresionado("correo") },
+            enabled = !estaCargando,
+            thisButtonSubmitted = estaCargando && botonDeSubmitPresionado == "correo",
+            modificadorAnimacion = Modifier.align(Alignment.CenterHorizontally)
         )
 
     }

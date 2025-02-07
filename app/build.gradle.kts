@@ -105,6 +105,9 @@ dependencies {
     implementation(libs.androidx.foundation.layout.android) // Si usas Material3
     implementation(libs.androidx.fragment.ktx)
 
+    // Coil
+    implementation(libs.coil.compose)
+
     // APIs
     implementation (libs.retrofit)
     implementation (libs.converter.gson)

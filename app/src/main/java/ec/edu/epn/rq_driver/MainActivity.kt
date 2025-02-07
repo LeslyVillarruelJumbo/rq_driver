@@ -29,30 +29,41 @@ import com.google.android.gms.auth.api.identity.SignInClient
 import ec.edu.epn.rq_driver.navigation.AppNavigation
 import ec.edu.epn.rq_driver.ui.theme.Rq_driverTheme
 import ec.edu.epn.rq_driver.viewmodel.AuthViewModel
+import ec.edu.epn.rq_driver.viewmodel.PerfilViewModel
 
 class MainActivity : ComponentActivity() {
-  
-    private lateinit var clienteOneTap: SignInClient
     private val authViewModel: AuthViewModel by viewModels()
-    private val launcherResultadoOneTap = registerForActivityResult(
+    private val perfilViewModel: PerfilViewModel by viewModels()
+
+
+    private lateinit var clienteGoogleOneTap: SignInClient
+
+    private val googleOneTapLauncher = registerForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult()
-    ) { authViewModel.launcherResultadoOneTap(it, lifecycleScope, clienteOneTap) }
+    ) { authViewModel.googleOneTapLauncher(it, lifecycleScope, clienteGoogleOneTap) }
 
     fun iniciarGoogleOneTap() {
-        authViewModel.iniciarGoogleOneTap(clienteOneTap, launcherResultadoOneTap)
+        authViewModel.arrancarGoogleOneTap(clienteGoogleOneTap, googleOneTapLauncher)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        clienteOneTap = Identity.getSignInClient(this)
+
+        clienteGoogleOneTap = Identity.getSignInClient(this)
 
         enableEdgeToEdge()
         setContent {
             Rq_driverTheme {
                 val navController = rememberNavController() // Inicializa el controlador de navegación
+                
+            }
+        }
 
-                AppNavigation(navController, authViewModel)
+    }
+
+    AppNavigation(navController, authViewModel, perfilViewModel)
     private lateinit var clienteFusedLocation: FusedLocationProviderClient
 
     override fun onCreate(savedInstanceState: Bundle?) {

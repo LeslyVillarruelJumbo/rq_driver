@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import ec.edu.epn.rq_driver.viewmodel.AuthViewModel
+import ec.edu.epn.rq_driver.viewmodel.PerfilViewModel
 
 @Composable
 fun RecuperarCuentaScreen(nav: NavHostController) {
@@ -127,10 +128,10 @@ fun RecuperarCuentaScreen(nav: NavHostController) {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
+@RequiresApi(Build.VERSION_CODES.S)
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 private fun RetrieveAccountPreview() {
     val navController = rememberNavController()
-    AppNavigation(navController, AuthViewModel())
+    AppNavigation(navController, AuthViewModel(), PerfilViewModel())
 }

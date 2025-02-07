@@ -95,6 +95,8 @@ dependencies {
     implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
     implementation(libs.maps.compose)
+    implementation(libs.places)
+    implementation(libs.google.maps.services)
 
     // Dependencias adicionales (por ejemplo, Material Icons)
     implementation(libs.androidx.material.icons.extended)

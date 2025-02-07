@@ -1,6 +1,7 @@
 package ec.edu.epn.rq_driver.model
 
 data class Ruta (
+
   val latitudInicial: Number,
   val latitudFinal: Number,
   val longitudInicial: Number,
@@ -12,4 +13,5 @@ data class Ruta (
   val puntoInicial: String,
   val puntoFinal: String,
   val asientosDisponibles: Number,
+
 )

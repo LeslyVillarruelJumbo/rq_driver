@@ -3,7 +3,7 @@ package ec.edu.epn.rq_driver.viewmodel
 import android.Manifest
 import android.app.Application
 import android.content.pm.PackageManager
-import android.location.Geocoder
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,8 +13,13 @@ import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.util.Locale
-import android.util.Log
+import com.google.maps.DirectionsApi
+import com.google.maps.GeoApiContext
+import com.google.maps.model.DirectionsResult
+import com.google.maps.model.DirectionsRoute
+import com.google.maps.model.TravelMode
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class MapViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -28,14 +33,6 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
     // Estado para almacenar la ubicación actual del usuario
     private val _userLocation = MutableStateFlow<LatLng?>(null)
     val userLocation: StateFlow<LatLng?> = _userLocation
-
-    // Estado para almacenar coordenadas de un lugar
-    private val _coordinates = MutableStateFlow<LatLng?>(null)
-    val coordinates: StateFlow<LatLng?> = _coordinates
-
-    // Estado para el mensaje de error
-    private val _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage: StateFlow<String?> = _errorMessage
 
     // Verificar permisos y obtener ubicación
     fun checkLocationPermission() {
@@ -63,30 +60,26 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    // Obtener coordenadas de una dirección
-    fun getCoordinates(address: String, apiKey: String) {
-        viewModelScope.launch {
-            try {
-                val geocoder = Geocoder(getApplication(), Locale.getDefault())
-                val addressList = geocoder.getFromLocationName(address, 1)
+    // obtener la mejor ruta
+    suspend fun obtenerMejorRuta(startLat: Double, startLng: Double, endLat: Double, endLng: Double): DirectionsRoute? {
+        // Tu clave de API de Google Maps
+        val apiKey = "AIzaSyBxmMvFa-cnkBefCz59gBC_75DgG4ZyCdw"
 
-                // Verificar si la lista de direcciones es válida
-                if (!addressList.isNullOrEmpty()) {
-                    val location = addressList[0]
-                    _coordinates.value = LatLng(location.latitude, location.longitude)
-                    _errorMessage.value = null // Limpiamos el mensaje de error
-                } else {
-                    _coordinates.value = null // No se encontraron coordenadas
-                    _errorMessage.value = "No se pudieron obtener las coordenadas para: $address"
-                }
-            } catch (e: Exception) {
-                // Capturar excepciones y loguear para depurar
-                Log.e("GeocodingError", "Error al obtener coordenadas: ${e.message}")
-                _coordinates.value = null
-                _errorMessage.value = "Error al geocodificar la dirección: $address"
-            }
+        // Crear el contexto de la API de Google
+        val geoApiContext = GeoApiContext.Builder()
+            .apiKey(apiKey)
+            .build()
+
+        // Realizar la solicitud para obtener las direcciones
+        val result: DirectionsResult = withContext(Dispatchers.IO) {
+            DirectionsApi.newRequest(geoApiContext)
+                .origin(com.google.maps.model.LatLng(startLat, startLng))
+                .destination(com.google.maps.model.LatLng(endLat, endLng))
+                .mode(TravelMode.DRIVING) // Puedes cambiar esto a WALKING, BICYCLING, etc.
+                .await() // Esperar la respuesta
         }
+
+        // Devolver la primera ruta
+        return result.routes.firstOrNull()
     }
 }
-
-

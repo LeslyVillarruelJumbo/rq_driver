@@ -1,6 +1,7 @@
 package ec.edu.epn.rq_driver.components
 
 import android.graphics.BlurMaskFilter
+import android.util.Log
 import ec.edu.epn.rq_driver.ui.theme.Azul
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationSpec
@@ -42,6 +43,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.round
 import kotlinx.coroutines.launch
+import java.util.Date
+import java.util.GregorianCalendar
 
 object Utils {
 
@@ -121,4 +124,14 @@ object Utils {
         }
     }
 
+}
+
+
+fun getDateObject(year: Int, month: Int, dayOfMonth: Int) : Date {
+    return try {
+        GregorianCalendar(year,month-1,dayOfMonth).time
+    } catch (e: Exception) {
+        Log.e("Utils", "Error al interpretar la fecha proporcionada (${e.message})")
+        Date()
+    }
 }
